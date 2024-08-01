@@ -1,5 +1,11 @@
 import bpy
 from bpy.types import Menu
+# from .ui
+from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials
+from .dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_DissolveEdges, OBJECT_OT_mirror_DissolveLimited, OBJECT_OT_mirror_DissolveVerts
+from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
+from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove
+from .mirror_op import MirrorOperator
 
 
 
@@ -24,7 +30,7 @@ class VIEW3D_MT_MirrorDelete(Menu):
         
             
         self.layout.separator()
-        self.layout.operator(self.OBJECT_OT_mirror_DeleteVerts.bl_idname)
+        self.layout.operator(OBJECT_OT_mirror_DeleteVerts.bl_idname)
         self.layout.operator(OBJECT_OT_mirror_DeleteFaces.bl_idname)
         self.layout.separator()
         
@@ -34,8 +40,6 @@ class VIEW3D_MT_MirrorDelete(Menu):
         
         self.layout.separator()
         self.layout.operator(OBJECT_OT_cycle_items.bl_idname)
-        if OBJECT_OT_cycle_items == True: #delete this I don't think it does anything
-            bpy.types.SpaceView3D.draw_handler_remove(self._txt_activate, 'WINDOW')
         self.layout.operator(OBJECT_OT_mirror_merge.bl_idname)
         self.layout.separator()
         self.layout.operator(OBJECT_OT_mirror_UVSeams.bl_idname)
