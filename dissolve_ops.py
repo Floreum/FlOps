@@ -1,6 +1,6 @@
 import bpy 
 from bpy.types import Operator
-from .mirror_op import MirrorOperator
+from .mirror_op import OBJECT_OT_MirrorOperator
                
 class OBJECT_OT_mirror_merge(Operator):
     """Mirror Merge Operator"""
@@ -11,7 +11,7 @@ class OBJECT_OT_mirror_merge(Operator):
     def execute(self, context):
         # Custom merge functionality
         if context.scene.mirrorOP == True:
-            MirrorOperator(context)
+            bpy.ops.object.mirror_op()
         bpy.ops.mesh.merge(type='COLLAPSE', uvs=True)
         return {'FINISHED'}
 
@@ -24,7 +24,7 @@ class OBJECT_OT_mirror_DissolveLimited(Operator):
     def execute(self, context):
         # Custom dissolve functionality
         if context.scene.mirrorOP == True:
-            MirrorOperator(context)
+            bpy.ops.object.mirror_op()
         bpy.ops.mesh.dissolve_limited()
         return {'FINISHED'}
     
@@ -37,7 +37,7 @@ class OBJECT_OT_mirror_DissolveEdges(Operator): # broken? check later
     def execute(self, context):
         # Custom dissolve functionality
         if context.scene.mirrorOP == True:
-            MirrorOperator(context)
+            bpy.ops.object.mirror_op()
         bpy.ops.mesh.dissolve_edges()
         return {'FINISHED'}
 
@@ -50,7 +50,7 @@ class OBJECT_OT_mirror_DissolveVerts(Operator):
     def execute(self, context):
         # Custom dissolve functionality
         if context.scene.mirrorOP == True:
-            MirrorOperator(context)
+            bpy.ops.object.mirror_op()
         bpy.ops.mesh.dissolve_verts()
         return {'FINISHED'}
     

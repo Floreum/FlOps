@@ -1,6 +1,6 @@
 import bpy
 from bpy.types import Operator
-from .mirror_op import MirrorOperator
+from .mirror_op import OBJECT_OT_MirrorOperator
 
 class OBJECT_OT_mirror_DeleteVerts(Operator):
     """Mirror Delete Vert Operator"""
@@ -11,7 +11,7 @@ class OBJECT_OT_mirror_DeleteVerts(Operator):
     def execute(self, context):
         # Custom dissolve functionality
         if context.scene.mirrorOP == True:
-            MirrorOperator(context)
+            bpy.ops.object.mirror_op()
         bpy.ops.mesh.delete(type='VERT')
         return {'FINISHED'}
     
@@ -24,7 +24,7 @@ class OBJECT_OT_mirror_DeleteFaces(Operator):
     def execute(self, context):
         # Custom dissolve functionality
         if context.scene.mirrorOP == True:
-            MirrorOperator(context)
+            bpy.ops.object.mirror_op()
         bpy.ops.mesh.delete(type='FACE')
         return {'FINISHED'}
     

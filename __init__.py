@@ -14,11 +14,11 @@ from bpy.types import Operator, Panel, Menu
 import blf
 
 from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials
-from .ui import VIEW3D_MT_MirrorDelete
+from .ui import VIEW3D_MT_MirrorDelete, VIEW3D_MT_CycleItemsPanel
 from .dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_DissolveEdges, OBJECT_OT_mirror_DissolveLimited, OBJECT_OT_mirror_DissolveVerts
 from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
 from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into their own UI menus
-from .mirror_op import MirrorOperator
+from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 
 
 
@@ -55,21 +55,7 @@ bpy.types.Scene.run_check = bpy.props.BoolProperty(
 )
 
 
-# Custom Panel delete this
-class VIEW3D_PT_CycleItemsPanel(Panel):
-    """Panel for Cycle Items"""
-    bl_idname = "VIEW3D_PT_CycleItemsPanel"
-    bl_label = "Cycle Items Panel"
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = 'Tool'
-    bl_context = "objectmode"
 
-    def draw(self, context):
-        layout = self.layout
-        if context.scene.cycle_mode_active:
-            layout.label(text="Cycle Mode Active")
-            # Additional UI elements related to the operator can be added here
     
 
         
@@ -79,16 +65,25 @@ def draw_func(self, context):
 def register():
     register = bpy.utils.register_class
     
+    # Menus
+    register(VIEW3D_MT_MirrorDelete)
+    register(VIEW3D_MT_CycleItemsPanel)
+
+    
+    # Properties
+    register(MirrorAxisProperty)
+    bpy.types.Scene.mirror_axis = bpy.props.CollectionProperty(type=MirrorAxisProperty)
+    
+    # Operators
+    register(OBJECT_OT_MirrorOperator)
     register(OBJECT_OT_mirror_merge)
     register(OBJECT_OT_mirror_DissolveLimited)
     register(OBJECT_OT_mirror_DissolveEdges)
-    register(VIEW3D_MT_MirrorDelete)
     register(OBJECT_OT_mirror_DissolveVerts)
     register(OBJECT_OT_mirror_DeleteVerts)
     register(OBJECT_OT_mirror_DeleteFaces)
     register(OBJECT_OT_mirror_UVSeams)
     register(OBJECT_OT_cycle_items)
-    register(VIEW3D_PT_CycleItemsPanel)
     register(OBJECT_OT_mirror_Crease)
     register(OBJECT_OT_mirror_Extract)
     register(OBJECT_OT_ripedgemove)
@@ -101,20 +96,32 @@ def register():
     km = wm.keyconfigs.addon.keymaps.new(name='3D View', space_type='VIEW_3D')
     kmi = km.keymap_items.new("wm.call_menu", type='X', value='PRESS', ctrl=True, shift=True)
     kmi.properties.name = "VIEW3D_MT_MirrorDelete"
+    
+    kmi = km.keymap_items.new("wm.call_menu", type='C', value='PRESS', ctrl=True, shift=True)
+    kmi.properties.name = "VIEW3D_MT_CycleItemsPanel"
+    
 
 def unregister():
     unregister = bpy.utils.unregister_class
     
+    # Menus
+    unregister(VIEW3D_MT_MirrorDelete)
+    unregister(VIEW3D_MT_CycleItemsPanel)
+    
+    # Properties
+    unregister(MirrorAxisProperty)
+    del bpy.types.Scene.mirror_axis
+    
+    # Operators
+    unregister(OBJECT_OT_MirrorOperator)
     unregister(OBJECT_OT_mirror_merge)
     unregister(OBJECT_OT_mirror_DissolveLimited)
     unregister(OBJECT_OT_mirror_DissolveEdges)
-    unregister(VIEW3D_MT_MirrorDelete)
     unregister(OBJECT_OT_mirror_DissolveVerts)
     unregister(OBJECT_OT_mirror_DeleteVerts)
     unregister(OBJECT_OT_mirror_DeleteFaces)
     unregister(OBJECT_OT_mirror_UVSeams)
     unregister(OBJECT_OT_cycle_items)
-    unregister(VIEW3D_PT_CycleItemsPanel)
     unregister(OBJECT_OT_mirror_Crease)
     unregister(OBJECT_OT_mirror_Extract)
     unregister(OBJECT_OT_ripedgemove)
@@ -126,6 +133,8 @@ def unregister():
     if km:
         for kmi in km.keymap_items:
             if kmi.idname == 'wm.call_menu' and kmi.properties.name == 'VIEW3D_MT_MirrorDelete':
+                km.keymap_items.remove(kmi)
+            if kmi.idname == 'wm.call_menu' and kmi.properties.name == 'VIEW3D_MT_CycleItemsPanel':
                 km.keymap_items.remove(kmi)
                 break
 
