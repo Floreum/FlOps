@@ -9,7 +9,7 @@ from .mirror_op import MirrorOperator
 
 
 
-
+# Draw the UI
 class VIEW3D_MT_MirrorDelete(Menu):
     bl_idname = "VIEW3D_MT_MirrorDelete"
     bl_label = "Mirror Delete"
