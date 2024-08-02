@@ -6,6 +6,7 @@ from .dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_DissolveEdges
 from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
 from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove
 from .mirror_op import OBJECT_OT_MirrorOperator
+from .vertex_snap import OBJECT_OT_vertex_snap
 
 
 
@@ -17,9 +18,10 @@ class VIEW3D_MT_MirrorDelete(Menu):
     @staticmethod
     def draw(self, context):
         layout = self.layout
-        separate = layout.separator()
+        separator = self.layout.separator
         row = layout.row()
         column = layout.column()
+        operator = self.layout.operator
         
         
         # come back to this)
@@ -29,18 +31,21 @@ class VIEW3D_MT_MirrorDelete(Menu):
             column.label(text="Mirror Enabled")
         
             
-        self.layout.separator()
-        self.layout.operator(OBJECT_OT_mirror_DeleteVerts.bl_idname)
-        self.layout.operator(OBJECT_OT_mirror_DeleteFaces.bl_idname)
-        self.layout.separator()
+        separator()
+        operator(OBJECT_OT_mirror_DeleteVerts.bl_idname)
+        operator(OBJECT_OT_mirror_DeleteFaces.bl_idname)
+        separator()
         
-        self.layout.operator(OBJECT_OT_mirror_DissolveLimited.bl_idname)
-        self.layout.operator(OBJECT_OT_mirror_DissolveEdges.bl_idname)
-        self.layout.operator(OBJECT_OT_mirror_DissolveVerts.bl_idname)
+        separator()
+        operator(OBJECT_OT_mirror_DissolveLimited.bl_idname)
+        operator(OBJECT_OT_mirror_DissolveEdges.bl_idname)
+        operator(OBJECT_OT_mirror_DissolveVerts.bl_idname)
         
-        self.layout.separator()
-        self.layout.operator(OBJECT_OT_cycle_items.bl_idname)
-        self.layout.operator(OBJECT_OT_mirror_merge.bl_idname)
+        separator()
+        operator(OBJECT_OT_cycle_items.bl_idname)
+        operator(OBJECT_OT_mirror_merge.bl_idname)
+        operator(OBJECT_OT_vertex_snap.bl_idname)
+        
 
         
         
@@ -55,19 +60,20 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         separate = layout.separator()
         row = layout.row()
         column = layout.column()
+        operator = self.layout.operator
         
         layout.label(text="Alt Ops Menu")
-        self.layout.separator()
-        self.layout.operator(OBJECT_OT_mirror_UVSeams.bl_idname)
-        self.layout.operator(OBJECT_OT_mirror_Crease.bl_idname)
+        separator()
+        operator(OBJECT_OT_mirror_UVSeams.bl_idname)
+        operator(OBJECT_OT_mirror_Crease.bl_idname)
         
         column.label(text="Test")
-        self.layout.separator()
-        self.layout.operator(OBJECT_OT_mirror_Extract.bl_idname)
-        self.layout.operator(OBJECT_OT_ripedgemove.bl_idname)
+        separator()
+        operator(OBJECT_OT_mirror_Extract.bl_idname)
+        operator(OBJECT_OT_ripedgemove.bl_idname)
         layout.separator()
-        self.layout.operator(OBJECT_OT_SanitizeName.bl_idname)
-        self.layout.operator(OBJECT_OT_RemoveAllMaterials.bl_idname)
+        operator(OBJECT_OT_SanitizeName.bl_idname)
+        operator(OBJECT_OT_RemoveAllMaterials.bl_idname)
         # Additional UI elements related to the operator can be added here
         
         

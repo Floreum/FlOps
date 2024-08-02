@@ -19,6 +19,7 @@ from .dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_DissolveEdges
 from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
 from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into their own UI menus
 from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
+from .vertex_snap import OBJECT_OT_vertex_snap
 
 
 
@@ -89,6 +90,8 @@ def register():
     register(OBJECT_OT_ripedgemove)
     register(OBJECT_OT_SanitizeName)
     register(OBJECT_OT_RemoveAllMaterials)
+    register(OBJECT_OT_vertex_snap)
+    
     
 
 
@@ -127,6 +130,7 @@ def unregister():
     unregister(OBJECT_OT_ripedgemove)
     unregister(OBJECT_OT_SanitizeName)
     unregister(OBJECT_OT_RemoveAllMaterials)
+    unregister(OBJECT_OT_vertex_snap)
         
     wm = bpy.context.window_manager
     km = wm.keyconfigs.addon.keymaps.new(name='3D View', space_type='VIEW_3D')
