@@ -20,8 +20,10 @@ from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVer
 from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into their own UI menus
 from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 from .vertex_snap import OBJECT_OT_vertex_snap
+from .sync_visibility import OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu, draw_sync_visibility_menu
 
 
+classes = []
 
 extend = False
 
@@ -55,16 +57,15 @@ bpy.types.Scene.run_check = bpy.props.BoolProperty(
     default=False
 )
 
-
-
-    
-
-        
+      
 def draw_func(self, context):
     self.layout.menu("VIEW3D_MT_MirrorDelete")
 
+
+
 def register():
     register = bpy.utils.register_class
+    
     
     # Menus
     register(VIEW3D_MT_MirrorDelete)
@@ -91,6 +92,13 @@ def register():
     register(OBJECT_OT_SanitizeName)
     register(OBJECT_OT_RemoveAllMaterials)
     register(OBJECT_OT_vertex_snap)
+    
+    # Outliner
+    
+    for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
+        register(menu)
+		
+    bpy.types.OUTLINER_HT_header.append(draw_sync_visibility_menu)
     
     
 
@@ -131,6 +139,13 @@ def unregister():
     unregister(OBJECT_OT_SanitizeName)
     unregister(OBJECT_OT_RemoveAllMaterials)
     unregister(OBJECT_OT_vertex_snap)
+    
+    # Outliner
+    for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
+        if menu.bl_rna:  # Ensure the operator class is registered
+            return
+    
+    bpy.types.OUTLINER_HT_header.remove(draw_sync_render_view)
         
     wm = bpy.context.window_manager
     km = wm.keyconfigs.addon.keymaps.new(name='3D View', space_type='VIEW_3D')
