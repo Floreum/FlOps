@@ -8,6 +8,10 @@ class OBJECT_OT_SanitizeName(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     @staticmethod
+    def sanitize_mesh_name(name):
+        # Replace periods with underscores and replaces the Geo suffix
+        return name.replace('.', '_').rstrip("_Geo") + "_Mesh"
+    
     def sanitize_name(name):
         # Replace periods with underscores
         return name.replace('.', '_')
@@ -17,15 +21,15 @@ class OBJECT_OT_SanitizeName(Operator):
         bpy.ops.object.mode_set(mode='OBJECT')
         
         sanitize_name = OBJECT_OT_SanitizeName.sanitize_name
-        
+        sanitize_meshname = OBJECT_OT_SanitizeName.sanitize_mesh_name
         
         
         for obj in objects:
-            obj.name = sanitize_name(obj.name)
             if obj.type == 'MESH':
-                # Sanitize and rename mesh data
+                obj.data.name = sanitize_meshname(obj.name)
+                
                 if obj.data:
-                    obj.data.name = sanitize_name(obj.name)
+                    obj.data.name = sanitize_meshname(obj.name)
                     
                 # Sanitize and rename shape keys
                 if obj.data.shape_keys:
