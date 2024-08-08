@@ -57,7 +57,7 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
 
     def draw(self, context):
         layout = self.layout
-        separate = layout.separator()
+        separator = self.layout.separator
         row = layout.row()
         column = layout.column()
         operator = self.layout.operator

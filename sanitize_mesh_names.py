@@ -25,7 +25,7 @@ class OBJECT_OT_SanitizeName(Operator):
             if obj.type == 'MESH':
                 # Sanitize and rename mesh data
                 if obj.data:
-                    obj.data.name = sanitize_name(obj.data.name)
+                    obj.data.name = sanitize_name(obj.name)
                     
                 # Sanitize and rename shape keys
                 if obj.data.shape_keys:
