@@ -3,7 +3,7 @@ import blf
 from bpy.types import Operator, Panel, Menu
 from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 
-
+## I need to make a check for menu items to show up when in edit/object mode
 
 # Custom Operator for Cycling Items
 class OBJECT_OT_cycle_items(Operator):

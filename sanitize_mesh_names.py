@@ -10,10 +10,12 @@ class OBJECT_OT_SanitizeName(Operator):
     @staticmethod
     def sanitize_mesh_name(name):
         # Replace periods with underscores and replaces the Geo suffix
+        name = name.replace(' ', '')
         return name.replace('.', '_').rstrip("_Geo") + "_Mesh"
     
     def sanitize_name(name):
         # Replace periods with underscores
+        
         return name.replace('.', '_')
 
     @staticmethod
@@ -23,24 +25,29 @@ class OBJECT_OT_SanitizeName(Operator):
         sanitize_name = OBJECT_OT_SanitizeName.sanitize_name
         sanitize_meshname = OBJECT_OT_SanitizeName.sanitize_mesh_name
         
-        
+        # Need to figure out why this isn't working on the object level first
+        # probably should take it out of the objects for loops
         for obj in objects:
+            if obj.type == 'OBJECT':
+                obj.data.name = sanitize_name(obj.data.name)
+            
             if obj.type == 'MESH':
                 obj.data.name = sanitize_meshname(obj.name)
                 
                 if obj.data:
                     obj.data.name = sanitize_meshname(obj.name)
                     
-                # Sanitize and rename shape keys
+                # rename shape keys
                 if obj.data.shape_keys:
                     for key in obj.data.shape_keys.key_blocks:
                         key.name = sanitize_name(key.name)
                         
-                
+                # rename vertex groups 
+                # maybe I should make sure this is bones first so that these get automatically changed that way instead?
                 for group in obj.vertex_groups:
                     group.name = sanitize_name(group.name)
                     
-                # Sanitize and rename materials
+                # rename materials
                 for mat in obj.data.materials:
                     if mat:
                         mat.name = sanitize_name(mat.name)
