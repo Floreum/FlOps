@@ -1,5 +1,5 @@
 import bpy
-from bpy.types import Operator
+from bpy.types import Context, Event, Operator
 
 class OBJECT_OT_SanitizeName(Operator):
     """Sanitize all meshes names to prepare for other software that doesn't like certain characters"""
@@ -13,9 +13,9 @@ class OBJECT_OT_SanitizeName(Operator):
         name = name.replace(' ', '')
         return name.replace('.', '_').rstrip("_Geo") + "_Mesh"
     
+    @staticmethod
     def sanitize_name(name):
         # Replace periods with underscores
-        
         return name.replace('.', '_')
 
     @staticmethod
@@ -25,42 +25,62 @@ class OBJECT_OT_SanitizeName(Operator):
         sanitize_name = OBJECT_OT_SanitizeName.sanitize_name
         sanitize_meshname = OBJECT_OT_SanitizeName.sanitize_mesh_name
         
-        # Need to figure out why this isn't working on the object level first
-        # probably should take it out of the objects for loops
         for obj in objects:
-            if obj.type == 'OBJECT':
-                obj.data.name = sanitize_name(obj.data.name)
-            
             if obj.type == 'MESH':
                 obj.data.name = sanitize_meshname(obj.name)
                 
                 if obj.data:
                     obj.data.name = sanitize_meshname(obj.name)
                     
-                # rename shape keys
+                # Rename shape keys
                 if obj.data.shape_keys:
                     for key in obj.data.shape_keys.key_blocks:
                         key.name = sanitize_name(key.name)
                         
-                # rename vertex groups 
-                # maybe I should make sure this is bones first so that these get automatically changed that way instead?
+                # Rename vertex groups
                 for group in obj.vertex_groups:
                     group.name = sanitize_name(group.name)
                     
-                # rename materials
+                # Rename materials
                 for mat in obj.data.materials:
                     if mat:
                         mat.name = sanitize_name(mat.name)
-            
-                
 
     def execute(self, context):
         selected_objects = bpy.context.selected_objects
         
-        # Execute the function to rename mesh data, shape keys, materials, and empties
-        self.rename_mesh_data(selected_objects)
+        # Execute the function to rename mesh data, shape keys, materials
+        if selected_objects:
+            OBJECT_OT_SanitizeName.rename_mesh_data(selected_objects)
+        else:
+            return self.invoke(context)
         
         return {'FINISHED'}
+    
+    def invoke(self, context, event=None):
+        return context.window_manager.invoke_props_dialog(self)
+        #this wont trigger the operator for some reason
+        
+    
+    def draw(self, context):
+        self.layout.label(text="No objects are selected, all objects will be renamed!")
+        self.layout.label(text="Are you sure you want to proceed? ")
+
+class OBJECT_OT_SanitizeAllNames(Operator):
+    """Confirmation dialog for renaming all objects in the scene"""
+    bl_idname = "object.sanitize_all_names"
+    bl_label = "Confirm Rename All"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        OBJECT_OT_SanitizeName.rename_mesh_data(bpy.data.objects)
+        return {'FINISHED'}
+    
+    def cancel(self, context):
+        return {'CANCELLED'}
+    
+
+        
     
 class OBJECT_OT_RemoveAllMaterials(Operator):
     bl_idname = "obj.remove_mats"

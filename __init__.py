@@ -13,7 +13,7 @@ import bpy
 from bpy.types import Operator, Panel, Menu
 import blf
 
-from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials
+from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials, OBJECT_OT_SanitizeAllNames
 from .ui import VIEW3D_MT_MirrorDelete, VIEW3D_MT_CycleItemsPanel
 from .dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_DissolveEdges, OBJECT_OT_mirror_DissolveLimited, OBJECT_OT_mirror_DissolveVerts
 from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
@@ -85,13 +85,15 @@ def register():
     register(OBJECT_OT_mirror_DeleteVerts)
     register(OBJECT_OT_mirror_DeleteFaces)
     register(OBJECT_OT_mirror_UVSeams)
-    register(OBJECT_OT_cycle_items)
     register(OBJECT_OT_mirror_Crease)
     register(OBJECT_OT_mirror_Extract)
+    
+    register(OBJECT_OT_cycle_items)
     register(OBJECT_OT_ripedgemove)
     register(OBJECT_OT_SanitizeName)
     register(OBJECT_OT_RemoveAllMaterials)
     register(OBJECT_OT_vertex_snap)
+    register(OBJECT_OT_SanitizeAllNames)
     
     # Outliner
     
@@ -132,13 +134,15 @@ def unregister():
     unregister(OBJECT_OT_mirror_DeleteVerts)
     unregister(OBJECT_OT_mirror_DeleteFaces)
     unregister(OBJECT_OT_mirror_UVSeams)
-    unregister(OBJECT_OT_cycle_items)
     unregister(OBJECT_OT_mirror_Crease)
     unregister(OBJECT_OT_mirror_Extract)
+    
+    unregister(OBJECT_OT_cycle_items)
     unregister(OBJECT_OT_ripedgemove)
     unregister(OBJECT_OT_SanitizeName)
     unregister(OBJECT_OT_RemoveAllMaterials)
     unregister(OBJECT_OT_vertex_snap)
+    unregister(OBJECT_OT_SanitizeAllNames)
     
     # Outliner
     for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
