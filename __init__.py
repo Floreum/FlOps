@@ -20,6 +20,8 @@ from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVer
 from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into their own UI menus
 from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 from .vertex_snap import OBJECT_OT_vertex_snap
+from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
+
 from .sync_visibility import OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu, draw_sync_visibility_menu
 
 
@@ -87,6 +89,7 @@ def register():
     register(OBJECT_OT_mirror_UVSeams)
     register(OBJECT_OT_mirror_Crease)
     register(OBJECT_OT_mirror_Extract)
+    register(OBJECT_OT_mirror_MergeByCenter)
     
     register(OBJECT_OT_cycle_items)
     register(OBJECT_OT_ripedgemove)
@@ -136,6 +139,7 @@ def unregister():
     unregister(OBJECT_OT_mirror_UVSeams)
     unregister(OBJECT_OT_mirror_Crease)
     unregister(OBJECT_OT_mirror_Extract)
+    unregister(OBJECT_OT_mirror_MergeByCenter)
     
     unregister(OBJECT_OT_cycle_items)
     unregister(OBJECT_OT_ripedgemove)
@@ -149,7 +153,7 @@ def unregister():
         if menu.bl_rna:  # Ensure the operator class is registered
             return
     
-    bpy.types.OUTLINER_HT_header.remove(draw_sync_render_view)
+    bpy.types.OUTLINER_HT_header.remove(draw_sync_visibility_menu)
         
     wm = bpy.context.window_manager
     km = wm.keyconfigs.addon.keymaps.new(name='3D View', space_type='VIEW_3D')

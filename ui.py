@@ -7,6 +7,7 @@ from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVer
 from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove
 from .mirror_op import OBJECT_OT_MirrorOperator
 from .vertex_snap import OBJECT_OT_vertex_snap
+from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
 
 
 
@@ -46,6 +47,9 @@ class VIEW3D_MT_MirrorDelete(Menu):
         operator(OBJECT_OT_mirror_merge.bl_idname)
         operator(OBJECT_OT_vertex_snap.bl_idname)
         
+        separator()
+        layout.label(text="Merge by")
+        operator(OBJECT_OT_mirror_MergeByCenter.bl_idname)
 
         
         

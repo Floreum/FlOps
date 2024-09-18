@@ -1,81 +1,90 @@
 import bpy
+from bpy.types import Operator
 
-# Ensure we are in Edit Mode
-if bpy.context.object.mode != 'EDIT':
-    bpy.ops.object.mode_set(mode='EDIT')
+class OBJECT_OT_mirror_MergeByCenter(Operator):
+    """Mirror Merge by Center"""
+    bl_idname = "mesh.mirror_merge_center"
+    bl_label = "Merge by Center"
+    bl_options = {'REGISTER', 'UNDO'}
 
-# Switch to Vertex Select Mode
-bpy.ops.mesh.select_mode(type='VERT')
+    def execute(self, context):
+        # Ensure we are in Edit Mode
+        if bpy.context.object.mode != 'EDIT':
+            bpy.ops.object.mode_set(mode='EDIT')
 
-# Switch to Object Mode to manipulate vertex groups
-bpy.ops.object.mode_set(mode='OBJECT')
+        # Switch to Vertex Select Mode
+        bpy.ops.mesh.select_mode(type='VERT')
 
-# Get the active object
-obj = bpy.context.object
+        # Switch to Object Mode to manipulate vertex groups
+        # This can be deleted I think
+        bpy.ops.object.mode_set(mode='OBJECT')
 
-# Create a new vertex group or get the existing one
-group_name = "VGroup.L"
-vertex_group = obj.vertex_groups.get(group_name)
+        # Get the active object
+        obj = bpy.context.object
 
-if vertex_group is None:
-    vertex_group = obj.vertex_groups.new(name=group_name)
+        # Create a new vertex group or get the existing one
+        group_name = "VGroup.L"
+        vertex_group = obj.vertex_groups.get(group_name)
 
-# Clear any existing weights
-for v in obj.data.vertices:
-    vertex_group.remove([v.index])
+        if vertex_group is None:
+            vertex_group = obj.vertex_groups.new(name=group_name)
 
-# Assign the selected vertices to the new group
-vertex_group.add([v.index for v in obj.data.vertices if v.select], 1.0, 'REPLACE')
+        # Clear any existing weights
+        for v in obj.data.vertices:
+            vertex_group.remove([v.index])
 
-# Switch to Weight Paint Mode
-bpy.ops.object.mode_set(mode='WEIGHT_PAINT')
+        # Assign the selected vertices to the new group
+        vertex_group.add([v.index for v in obj.data.vertices if v.select], 1.0, 'REPLACE')
 
-# Symmetrize vertex weights
-bpy.ops.object.symmetrize_vertex_weights(groups='ACTIVE')
+        # Switch to Weight Paint Mode
+        bpy.ops.object.mode_set(mode='WEIGHT_PAINT')
 
-# Switch back to Edit Mode
-bpy.ops.object.mode_set(mode='EDIT')
+        # Symmetrize vertex weights
+        bpy.ops.object.symmetrize_vertex_weights(groups='ACTIVE')
 
-# Ensure we're in Vertex Select Mode
-bpy.ops.mesh.select_mode(type='VERT')
+        # Switch back to Edit Mode
+        bpy.ops.object.mode_set(mode='EDIT')
 
-# Select vertices from VGroup.L
-# Switch to Object Mode to perform selection
-bpy.ops.object.mode_set(mode='OBJECT')
+        # Ensure we're in Vertex Select Mode
+        bpy.ops.mesh.select_mode(type='VERT')
 
-# Get the vertex group index
-group_index = obj.vertex_groups[group_name].index
+        # Select vertices from VGroup.L
+        # Switch to Object Mode to perform selection
+        bpy.ops.object.mode_set(mode='OBJECT')
 
-# Deselect all vertices first
-bpy.ops.object.mode_set(mode='EDIT')
-bpy.ops.mesh.merge(type='CENTER')
-bpy.ops.mesh.select_all(action='DESELECT')
+        # Get the vertex group index
+        group_index = obj.vertex_groups[group_name].index
 
-# Ensure the object has the vertex group
-if "VGroup.R" in obj.vertex_groups:
-    # Set the active vertex group to VGroup.R
-    obj.vertex_groups.active = obj.vertex_groups["VGroup.R"]
-    
-    # Switch to Edit Mode
-    bpy.ops.object.mode_set(mode='EDIT')
-    
-    # Select the vertices in the vertex group
-    bpy.ops.object.vertex_group_select()
-    bpy.ops.mesh.merge(type='CENTER')
-    
-else:
-    print("Vertex group 'VGroup.R' not found.")
-    
-# Get the active object
-obj = bpy.context.active_object
+        # Deselect all vertices first
+        bpy.ops.object.mode_set(mode='EDIT')
+        bpy.ops.mesh.merge(type='CENTER')
+        bpy.ops.mesh.select_all(action='DESELECT')
 
-# List of vertex groups to delete
-vertex_groups_to_delete = ["VGroup.L", "VGroup.R"]
+        # Ensure the object has the vertex group
+        if "VGroup.R" in obj.vertex_groups:
+            # Set the active vertex group to VGroup.R
+            obj.vertex_groups.active = obj.vertex_groups["VGroup.R"]
+            
+            # Switch to Edit Mode
+            bpy.ops.object.mode_set(mode='EDIT')
+            
+            # Select the vertices in the vertex group
+            bpy.ops.object.vertex_group_select()
+            bpy.ops.mesh.merge(type='CENTER')
+            
+        else:
+            print("Vertex group 'VGroup.R' not found.")
+            
+        # Get the active object
+        obj = bpy.context.active_object
 
-# Loop through the list and delete each vertex group if it exists
-for vg_name in vertex_groups_to_delete:
-    vg = obj.vertex_groups.get(vg_name)
-    if vg is not None:
-        obj.vertex_groups.remove(vg)
-    else:
-        print(f"Vertex group '{vg_name}' not found.")
+        # List of vertex groups to delete
+        vertex_groups_to_delete = ["VGroup.L", "VGroup.R"]
+
+        # Loop through the list and delete each vertex group if it exists
+        for vg_name in vertex_groups_to_delete:
+            vg = obj.vertex_groups.get(vg_name)
+            if vg is not None:
+                obj.vertex_groups.remove(vg)
+            else:
+                print(f"Vertex group '{vg_name}' not found.")

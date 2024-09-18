@@ -1,6 +1,5 @@
 import bpy 
 from bpy.types import Operator
-from .mirror_op import OBJECT_OT_MirrorOperator
                
 class OBJECT_OT_mirror_merge(Operator):
     """Mirror Merge Operator"""
