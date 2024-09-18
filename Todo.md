@@ -3,3 +3,4 @@
 - Need to figure out why this isn't working on the object level first, probably should take it out of the objects for loops
 - Add folders for all the script files
 - Fix when no objects are selected rename popup warning
+- Figure out how to make MergeCenter use other axis.
