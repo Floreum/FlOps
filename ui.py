@@ -1,4 +1,5 @@
 import bpy
+import bmesh
 from bpy.types import Menu
 # from .ui
 from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials
@@ -8,6 +9,8 @@ from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_
 from .mirror_op import OBJECT_OT_MirrorOperator
 from .vertex_snap import OBJECT_OT_vertex_snap
 from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
+from .DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
+from .VertexColSelection import OBJECT_OT_VertexColorSelection
 
 
 
@@ -79,5 +82,13 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         operator(OBJECT_OT_SanitizeName.bl_idname)
         operator(OBJECT_OT_RemoveAllMaterials.bl_idname)
         # Additional UI elements related to the operator can be added here
+        layout.separator()
+        layout.operator_context = 'INVOKE_DEFAULT'
+        layout.operator("object.delete_vertex_group_weights", text="Delete Selected Vertex Weights")
+        layout.operator("object.copy_vertex_weights", text="Copy Active to Selected Vertex Weights")
+        
+        layout.separator()
+        operator("object.vertex_color_selection")
+        
         
         

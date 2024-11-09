@@ -2,9 +2,8 @@ import bpy
 from bpy.types import Operator
 import bmesh
 
-# Need to fix how it doesn't create the shrink shrek on the final object, the order seems to get screwed up
 class OBJECT_OT_vertex_snap(Operator):
-    bl_idname = "object.add_vertex_group_and_shrinkwrap"
+    bl_idname = "object.vertex_snap_and_shrinkwrap"
     bl_label = "Add Vertex Group and Shrinkwrap"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -19,11 +18,11 @@ class OBJECT_OT_vertex_snap(Operator):
             self.report({'WARNING'}, "Select at least two mesh objects")
             return {'CANCELLED'}
         
-        # Last selected object as target
-        target_obj = selected_objects[-1]
+        # Ensure the last selected object is used as the target
+        target_obj = context.active_object
         
-        for obj in selected_objects[:-1]:
-            if obj.type == 'MESH':
+        for obj in selected_objects:
+            if obj != target_obj and obj.type == 'MESH':
                 vg = self.add_vertex_group_with_weights(obj, self.vertex_group_name)
                 self.add_shrinkwrap_modifier(obj, vg.name, target_obj)
         return {'FINISHED'}
@@ -61,15 +60,15 @@ class OBJECT_OT_vertex_snap(Operator):
 
 # Add to Vertex Group Specials menu
 def menu_func(self, context):
-    self.layout.operator(OBJECT_OT_add_vertex_group_and_shrinkwrap.bl_idname)
+    self.layout.operator(OBJECT_OT_vertex_snap.bl_idname)
 
 # Register classes and menu
 def register():
-    bpy.utils.register_class(OBJECT_OT_add_vertex_group_and_shrinkwrap)
+    bpy.utils.register_class(OBJECT_OT_vertex_snap)
     bpy.types.MESH_MT_vertex_group_context_menu.append(menu_func)
 
 def unregister():
-    bpy.utils.unregister_class(OBJECT_OT_add_vertex_group_and_shrinkwrap)
+    bpy.utils.unregister_class(OBJECT_OT_vertex_snap)
     bpy.types.MESH_MT_vertex_group_context_menu.remove(menu_func)
 
 if __name__ == "__main__":

@@ -21,6 +21,8 @@ from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_
 from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 from .vertex_snap import OBJECT_OT_vertex_snap
 from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
+from .DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
+from .VertexColSelection import OBJECT_OT_VertexColorSelection
 
 from .sync_visibility import OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu, draw_sync_visibility_menu
 
@@ -58,6 +60,7 @@ bpy.types.Scene.run_check = bpy.props.BoolProperty(
     description="Running",
     default=False
 )
+
 
       
 def draw_func(self, context):
@@ -97,6 +100,13 @@ def register():
     register(OBJECT_OT_RemoveAllMaterials)
     register(OBJECT_OT_vertex_snap)
     register(OBJECT_OT_SanitizeAllNames)
+    
+    register(OBJECT_OT_DeleteVertexGroupWeights)
+    register(OBJECT_OT_CopyVertexWeights)
+    
+    #Experimental
+    
+    register(OBJECT_OT_VertexColorSelection)
     
     # Outliner
     
@@ -147,6 +157,12 @@ def unregister():
     unregister(OBJECT_OT_RemoveAllMaterials)
     unregister(OBJECT_OT_vertex_snap)
     unregister(OBJECT_OT_SanitizeAllNames)
+    
+    unregister(OBJECT_OT_DeleteVertexGroupWeights)
+    unregister(OBJECT_OT_CopyVertexWeights)
+    
+    #Experimental
+    unregister(OBJECT_OT_VertexColorSelection)
     
     # Outliner
     for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
