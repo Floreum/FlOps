@@ -2,10 +2,10 @@ import bpy
 from bpy.props import StringProperty
 from bpy.types import Operator
 
-class OBJECT_OT_RenameWithConflictResolution(Operator):
+class VIEW3D_OT_RenameWithConflictResolution(Operator):
     """Rename the selected object with conflict resolution for similar names"""
     bl_idname = "object.rename_with_conflict_resolution"
-    bl_label = "Rename Object with Conflict Resolution"
+    bl_label = "Rename with Conflict Resolution"
     bl_options = {'REGISTER', 'UNDO'}
     
     new_name: StringProperty(
@@ -48,9 +48,18 @@ class OBJECT_OT_RenameWithConflictResolution(Operator):
         # Display a pop-up to allow user input
         return context.window_manager.invoke_props_dialog(self)
 
-# Register the operator
+# Register the operator and add it to the 3D Viewport Object Context Menu
 def menu_func(self, context):
-    self.layout.operator(OBJECT_OT_RenameWithConflictResolution.bl_idname)
+    self.layout.operator(VIEW3D_OT_RenameWithConflictResolution.bl_idname, text="Rename with Conflict Resolution")
 
-bpy.utils.register_class(OBJECT_OT_RenameWithConflictResolution)
-bpy.types.VIEW3D_MT_object.append(menu_func)
+# Register and add to the 3D Viewport Object Context Menu
+def register():
+    bpy.utils.register_class(VIEW3D_OT_RenameWithConflictResolution)
+    bpy.types.VIEW3D_MT_object_context_menu.append(menu_func)  # Adding to the 3D Viewport Object Context Menu
+
+def unregister():
+    bpy.utils.unregister_class(VIEW3D_OT_RenameWithConflictResolution)
+    bpy.types.VIEW3D_MT_object_context_menu.remove(menu_func)
+
+if __name__ == "__main__":
+    register()
