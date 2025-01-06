@@ -13,18 +13,33 @@ import bpy
 from bpy.types import Operator, Panel, Menu
 import blf
 
-from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials, OBJECT_OT_SanitizeAllNames
-from .ui import VIEW3D_MT_MirrorDelete, VIEW3D_MT_CycleItemsPanel
-from .dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_DissolveEdges, OBJECT_OT_mirror_DissolveLimited, OBJECT_OT_mirror_DissolveVerts
+# Organized list of imports
 from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
-from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into their own UI menus
-from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
-from .vertex_snap import OBJECT_OT_vertex_snap
-from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
 from .DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
+from .dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_DissolveEdges, OBJECT_OT_mirror_DissolveLimited, OBJECT_OT_mirror_DissolveVerts
+
+from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
+from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
+
+from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials, OBJECT_OT_SanitizeAllNames
+from .sync_visibility import OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu, draw_sync_visibility_menu
+
+from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into its own UI menus
+
+from .ui import VIEW3D_MT_MirrorDelete, VIEW3D_MT_CycleItemsPanel
+
+from .vertex_snap import OBJECT_OT_vertex_snap
 from .VertexColSelection import OBJECT_OT_VertexColorSelection
 
-from .sync_visibility import OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu, draw_sync_visibility_menu
+# New Stuff - unorganized and needs to be worked in
+
+from .FaceSetFromVertGroups import register as register_faceset2vertgroups, unregister as unregister_register_faceset2vertgroups
+from .MaskSelectedVerts import register as register_mask_tool, unregister as unregister_mask_tool
+# from .SelectByVertCol
+# from .RenameConflict
+# from .MergeLast
+# from .ui_pie
+
 
 
 classes = []
@@ -104,10 +119,12 @@ def register():
     register(OBJECT_OT_DeleteVertexGroupWeights)
     register(OBJECT_OT_CopyVertexWeights)
     
+
+    
     #Experimental
-    
     register(OBJECT_OT_VertexColorSelection)
-    
+    register_mask_tool()
+    register_faceset2vertgroups()
     # Outliner
     
     for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
@@ -163,6 +180,10 @@ def unregister():
     
     #Experimental
     unregister(OBJECT_OT_VertexColorSelection)
+    unregister_mask_tool()
+    unregister_register_faceset2vertgroups()
+    
+    
     
     # Outliner
     for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:

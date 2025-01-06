@@ -5,24 +5,18 @@ from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 
 ## I need to make a check for menu items to show up when in edit/object mode
 
-# Custom Operator for Cycling Items
 class OBJECT_OT_cycle_items(Operator):
     """Cycle Through Items Operator"""
     bl_idname = "mesh.cycle_items"
     bl_label = "Cycle Items"
     bl_options = {'REGISTER', 'UNDO'}
 
-    # Define properties for the dialog
-
-    
-
     def __init__(self):
-        self._item_index = 0  # Initialize the item index
+        self._item_index = 0  
         self._txt_activate = None
         self._txt_instr = None
 
     def invoke(self, context, event):
-        # Show properties dialog
         return context.window_manager.invoke_props_dialog(self)
 
     def execute(self, context):
@@ -37,8 +31,6 @@ class OBJECT_OT_cycle_items(Operator):
             self._txt_instr = bpy.types.SpaceView3D.draw_handler_add(self.draw_text_activate_instruct, (context,), 'WINDOW', 'POST_PIXEL')
             context.area.tag_redraw()
         
-        
-        # Add modal handler
         context.window_manager.modal_handler_add(self)
         
         return {'RUNNING_MODAL'}
@@ -53,14 +45,12 @@ class OBJECT_OT_cycle_items(Operator):
             bpy.ops.mesh.select_prev_item()
             self._item_index -= 1
         elif event.type in {'LEFTMOUSE', 'RET'} and event.value == 'PRESS':
-            # Show properties dialog after confirming
             self.report({'INFO'}, "Item selected: {}".format(self._item_index))
             context.scene.cycle_mode_active = False
             
             bpy.ops.mesh.loop_multi_select(ring=True)
             bpy.ops.object.mirror_op()
             
-            # Remove draw handler
             if self._txt_activate:
                 bpy.types.SpaceView3D.draw_handler_remove(self._txt_activate, 'WINDOW')
                 bpy.types.SpaceView3D.draw_handler_remove(self._txt_instr, 'WINDOW')
@@ -73,11 +63,9 @@ class OBJECT_OT_cycle_items(Operator):
         elif event.type in {'ESC', 'RIGHTMOUSE'} and event.value == 'PRESS':
             self.report({'INFO'}, "Operation cancelled")
             context.scene.cycle_mode_active = False
-            # Remove draw handler
             if self._txt_activate:
                 bpy.types.SpaceView3D.draw_handler_remove(self._txt_activate, 'WINDOW')
                 bpy.types.SpaceView3D.draw_handler_remove(self._txt_instr, 'WINDOW')
-                # context.area.tag_redraw()
                 self._txt_activate = None
                 context.area.tag_redraw()
                 
@@ -87,22 +75,16 @@ class OBJECT_OT_cycle_items(Operator):
         return {'RUNNING_MODAL'}
 
     def draw_text_activate(self, context):
-        # Get the 3D view space
         space = context.space_data
-        # Create a new font object
         font_id = 0
-        # Define text properties
         blf.position(font_id, 0.5 * context.region.width, 0.03 * context.region.height, 0)
         blf.size(font_id, 20)
         blf.color(font_id, 0.0, 1.0, 0.0, 0.5)
         blf.draw(font_id, "Cycle Mode")
         
     def draw_text_activate_instruct(self, context):
-        # Get the 3D view space
         space = context.space_data
-        # Create a new font object
         font_id = 1
-        # Define text properties
         blf.position(font_id, 0.05 * context.region.width, 0.3 * context.region.height, 0)
         blf.size(font_id, 12)
         blf.color(font_id, 1.0, 1.0, 1.0, 0.8)
@@ -115,13 +97,9 @@ class OBJECT_OT_mirror_UVSeams(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        # Custom dissolve functionality
         if context.scene.mirrorOP == True:
             bpy.ops.object.mirror_op()
         bpy.ops.mesh.mark_seam(clear=False)
-        #elif clear == True:
-            #bpy.ops.mesh.mark_seam(clear=True)
-
         return {'FINISHED'}
     
 class OBJECT_OT_mirror_Crease(Operator):
@@ -131,7 +109,6 @@ class OBJECT_OT_mirror_Crease(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        # Custom dissolve functionality
         if context.scene.mirrorOP == True:
             bpy.ops.object.mirror_op()
         bpy.ops.transform.edge_crease()
@@ -146,7 +123,6 @@ class OBJECT_OT_ripedgemove(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        # Custom dissolve functionality
         if context.scene.mirrorOP == True:
             bpy.ops.object.mirror_op()
         bpy.ops.mesh.rip_edge_move(MESH_OT_rip_edge={"mirror":False, "use_proportional_edit":False, "proportional_edit_falloff":'SMOOTH', "proportional_size":1, 
@@ -168,11 +144,9 @@ class OBJECT_OT_mirror_Extract(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        # Check if mirroring is enabled
         if context.scene.mirrorOP:
             bpy.ops.object.mirror_op()
         
-        # Store active mirror axis
         active_obj = context.active_object
         mirror_axis = []
         

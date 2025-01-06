@@ -1,17 +1,23 @@
 import bpy
 import bmesh
 from bpy.types import Menu
-# from .ui
-from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials
-from .dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_DissolveEdges, OBJECT_OT_mirror_DissolveLimited, OBJECT_OT_mirror_DissolveVerts
+
 from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
-from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove
-from .mirror_op import OBJECT_OT_MirrorOperator
-from .vertex_snap import OBJECT_OT_vertex_snap
-from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
 from .DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
+from .dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_DissolveEdges, OBJECT_OT_mirror_DissolveLimited, OBJECT_OT_mirror_DissolveVerts
+
+from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
+from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
+
+from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials, OBJECT_OT_SanitizeAllNames
+from .sync_visibility import OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu, draw_sync_visibility_menu
+
+from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into its own UI menus
+
+from .vertex_snap import OBJECT_OT_vertex_snap
 from .VertexColSelection import OBJECT_OT_VertexColorSelection
 
+# from .FaceSetFromVertGroups import OBJECT_OT_FaceSetFromVertGroups 
 
 
 # Draw the Delete UI
@@ -89,6 +95,7 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         
         layout.separator()
         operator("object.vertex_color_selection")
+        operator(OBJECT_OT_FaceSetFromVertGroups.bl_idname)
         
         
         
