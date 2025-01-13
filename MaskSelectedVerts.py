@@ -23,7 +23,7 @@ class SCULPT_OT_selected_vert_mask_tool(bpy.types.Operator):
 # Append the operator to the existing Mask menu
 def mask_menu_func(self, context):
     self.layout.separator()
-    self.layout.label(text="FlorOps")
+    self.layout.label(text="FlOps")
     self.layout.operator(SCULPT_OT_selected_vert_mask_tool.bl_idname, text="Mask from Edit Mode Selection")
 
 

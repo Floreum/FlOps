@@ -1,9 +1,9 @@
 bl_info = {
-    "name" : "Fastops",
+    "name" : "FlOps",
     "author" : "Floreum",
-    "description" : "",
+    "description" : "This is a test",
     "blender" : (4, 0, 0),
-    "version" : (0, 0, 1),
+    "version" : (0, 1, 0),
     "location" : "",
     "warning" : "",
     "category" : "Generic"
@@ -35,6 +35,7 @@ from .VertexColSelection import OBJECT_OT_VertexColorSelection
 
 from .FaceSetFromVertGroups import register as register_faceset2vertgroups, unregister as unregister_register_faceset2vertgroups
 from .MaskSelectedVerts import register as register_mask_tool, unregister as unregister_mask_tool
+from .MirrorLattice import register as register_mirror_lattice, unregister as unregister_mirror_lattice
 # from .SelectByVertCol
 # from .RenameConflict
 # from .MergeLast
@@ -125,6 +126,7 @@ def register():
     register(OBJECT_OT_VertexColorSelection)
     register_mask_tool()
     register_faceset2vertgroups()
+    register_mirror_lattice()
     # Outliner
     
     for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
@@ -182,6 +184,7 @@ def unregister():
     unregister(OBJECT_OT_VertexColorSelection)
     unregister_mask_tool()
     unregister_register_faceset2vertgroups()
+    unregister_mirror_lattice()
     
     
     
