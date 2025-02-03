@@ -28,8 +28,10 @@ from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_
 
 from .ui import VIEW3D_MT_MirrorDelete, VIEW3D_MT_CycleItemsPanel
 
+from .UI_Additions.SetAttributes import register as register_setattr, unregister as unregister_setattr
 from .vertex_snap import OBJECT_OT_vertex_snap
 from .VertexColSelection import OBJECT_OT_VertexColorSelection
+
 
 # New Stuff - unorganized and needs to be worked in
 
@@ -127,6 +129,7 @@ def register():
     register_mask_tool()
     register_faceset2vertgroups()
     register_mirror_lattice()
+    register_setattr()
     # Outliner
     
     for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
@@ -185,6 +188,7 @@ def unregister():
     unregister_mask_tool()
     unregister_register_faceset2vertgroups()
     unregister_mirror_lattice()
+    unregister_setattr()
     
     
     
