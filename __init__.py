@@ -32,6 +32,9 @@ from .UI_Additions.SetAttributes import register as register_setattr, unregister
 from .vertex_snap import OBJECT_OT_vertex_snap
 from .VertexColSelection import OBJECT_OT_VertexColorSelection
 
+from .transfer_mode_weightpaint import register as register_transfer_mode_wp, unregister as unregister_transfer_mode_wp
+
+
 
 # New Stuff - unorganized and needs to be worked in
 
@@ -122,6 +125,8 @@ def register():
     register(OBJECT_OT_DeleteVertexGroupWeights)
     register(OBJECT_OT_CopyVertexWeights)
     
+    register_transfer_mode_wp()
+    
 
     
     #Experimental
@@ -185,10 +190,13 @@ def unregister():
     
     #Experimental
     unregister(OBJECT_OT_VertexColorSelection)
+    
+    unregister_transfer_mode_wp()
     unregister_mask_tool()
     unregister_register_faceset2vertgroups()
     unregister_mirror_lattice()
     unregister_setattr()
+    
     
     
     
