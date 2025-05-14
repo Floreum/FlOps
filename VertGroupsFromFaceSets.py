@@ -3,8 +3,10 @@ import bmesh
 import random
 from bpy.types import Operator
 
+
+
 class SCULPT_OT_FaceSetToVertGroups(Operator):
-    bl_idname = "sculpt.vertex_groups_to_face_sets"
+    bl_idname = "sculpt.face_set_from_vert_groups"
     bl_label = "Create a Vertex Groups from Face Sets"
     bl_description = "Creates vertex groups based on face sets (Useful for GoB)"
     bl_options = {'REGISTER', 'UNDO'}
@@ -50,15 +52,11 @@ class SCULPT_OT_FaceSetToVertGroups(Operator):
         
         return {'FINISHED'}
     
-# Append the operator to the existing Mask menu
-def faceset_mask_menu_func(self, context):
-    self.layout.operator(SCULPT_OT_FaceSetToVertGroups.bl_idname, text="Face Set from Vertex Groups")
 
 def register():
     bpy.utils.register_class(SCULPT_OT_FaceSetToVertGroups)
-    bpy.types.VIEW3D_MT_mask.append(faceset_mask_menu_func)
+
 
 def unregister():
     bpy.utils.unregister_class(SCULPT_OT_FaceSetToVertGroups)
-    bpy.types.VIEW3D_MT_mask.remove(faceset_mask_menu_func)
 

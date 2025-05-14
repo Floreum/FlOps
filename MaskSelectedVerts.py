@@ -1,8 +1,9 @@
 import bpy
 
+
 class SCULPT_OT_selected_vert_mask_tool(bpy.types.Operator):
     """Mask from Edit Mode Selection"""
-    bl_idname = "sculpt.selected_mask_tool"
+    bl_idname = "sculpt.selected_vert_mask_tool"
     bl_label = "Mask from Edit Mode Selection"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -20,17 +21,12 @@ class SCULPT_OT_selected_vert_mask_tool(bpy.types.Operator):
 
         return {'FINISHED'}
 
-# Append the operator to the existing Mask menu
-def mask_menu_func(self, context):
-    self.layout.separator()
-    self.layout.label(text="FlOps")
-    self.layout.operator(SCULPT_OT_selected_vert_mask_tool.bl_idname, text="Mask from Edit Mode Selection")
 
 
 def register():
     bpy.utils.register_class(SCULPT_OT_selected_vert_mask_tool)
-    bpy.types.VIEW3D_MT_mask.append(mask_menu_func)  
+
 
 def unregister():
     bpy.utils.unregister_class(SCULPT_OT_selected_vert_mask_tool)
-    bpy.types.VIEW3D_MT_mask.remove(mask_menu_func) 
+
