@@ -54,6 +54,7 @@ from .transfer_mode_weightpaint import register as register_transfer_mode_wp, un
 # Experimental Operators
 from .VertexColSelection import OBJECT_OT_VertexColorSelection
 from .UI_Additions.SetAttributes import register as register_setattr, unregister as unregister_setattr
+from .UI_Additions.SetOrigin import register as register_setorigin, unregister as unregister_setorigin
 
 # Sculpting Operators
 from .VertGroupsFromFaceSets import SCULPT_OT_FaceSetToVertGroups
@@ -141,6 +142,7 @@ def register():
     # Experimental Operators
     register(OBJECT_OT_VertexColorSelection)
     register_setattr()
+    register_setorigin()
 
     # Sculpting Operators
     bpy.utils.register_class(SCULPT_OT_Weights2FaceSets)
@@ -208,6 +210,8 @@ def unregister():
     # Experimental Operators
     unregister(OBJECT_OT_VertexColorSelection)
     unregister_setattr()
+    unregister_setorigin()
+
 
     # Sculpting Operators
     bpy.utils.unregister_class(SCULPT_OT_Weights2FaceSets)
