@@ -8,6 +8,7 @@ class Flops_OT_Set_Origin_to_Vertices(bpy.types.Operator):
     """
     bl_idname = "object.origin_to_selected_vertices"
     bl_label = "Origin to Selected Vertices"
+    bl_description = "Set the object's origin to the selected vertices"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -15,6 +16,9 @@ class Flops_OT_Set_Origin_to_Vertices(bpy.types.Operator):
         if not obj or obj.type != 'MESH':
             self.report({'WARNING'}, "Active object is not a mesh")
             return {'CANCELLED'}
+
+        # Store current mode
+        prev_mode = obj.mode
 
         bpy.ops.object.mode_set(mode='OBJECT')
 
@@ -30,6 +34,8 @@ class Flops_OT_Set_Origin_to_Vertices(bpy.types.Operator):
 
         if not selected_verts:
             self.report({'WARNING'}, "No vertices selected")
+            # Restore previous mode
+            bpy.ops.object.mode_set(mode=prev_mode)
             return {'CANCELLED'}
 
         # Compute local-space centroid of selection
@@ -44,24 +50,41 @@ class Flops_OT_Set_Origin_to_Vertices(bpy.types.Operator):
 
         # Finally move object origin
         obj.location = center_world
+
+        # Restore previous mode
+        bpy.ops.object.mode_set(mode=prev_mode)
         return {'FINISHED'}
 
 
 def menu_func(self, context):
+    self.layout.separator()
+    self.layout.label(text="FlOps")
     self.layout.operator(
         Flops_OT_Set_Origin_to_Vertices.bl_idname,
         text=Flops_OT_Set_Origin_to_Vertices.bl_label,
         icon='OBJECT_ORIGIN'
     )
 
+def snap_pie_menu_func(self, context):
+    pie = self.layout.menu_pie()
+    # Example: Assign your operator to the BOTTOM slice
+    pie.operator(
+        Flops_OT_Set_Origin_to_Vertices.bl_idname,
+        text="Origin to Selected Vertices",
+        icon='OBJECT_ORIGIN'
+    )
+    # The rest of the pie slices are filled by the original menu
+
 def register():
     bpy.utils.register_class(Flops_OT_Set_Origin_to_Vertices)
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(menu_func)
     bpy.types.VIEW3D_MT_object_context_menu.append(menu_func)
+    bpy.types.VIEW3D_MT_snap_pie.append(snap_pie_menu_func)
 
 def unregister():
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(menu_func)
     bpy.types.VIEW3D_MT_object_context_menu.remove(menu_func)
+    bpy.types.VIEW3D_MT_snap_pie.remove(snap_pie_menu_func)
     bpy.utils.unregister_class(Flops_OT_Set_Origin_to_Vertices)
 
 

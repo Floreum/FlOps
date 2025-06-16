@@ -46,6 +46,7 @@ from .temp_layout import (
     OBJECT_OT_ripedgemove,
 )
 from .vertex_snap import OBJECT_OT_vertex_snap
+from .Misc.BlendNormalsBoundaries import register as register_blend_normals, unregister as unregister_blend_normals
 
 # Weight Painting Operators
 from .DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
@@ -63,8 +64,7 @@ from .Weights2FaceSets import SCULPT_OT_Weights2FaceSets
 
 # Menus
 from .ui import VIEW3D_MT_MirrorDelete, VIEW3D_MT_CycleItemsPanel
-from .FlopsMenus import ( flops_mask_menu,
-                         vertex_groups_menu, MESH_MT_flops_vertex_groups)
+from .FlopsMenus import register as flops_menus_register, unregister as flops_menus_unregister
 
 # Properties
 bpy.types.Scene.mirrorOP = bpy.props.BoolProperty(
@@ -125,6 +125,7 @@ def register():
     register(OBJECT_OT_mirror_Crease)
     register(OBJECT_OT_mirror_Extract)
     register(OBJECT_OT_mirror_MergeByCenter)
+    register_blend_normals()
 
     # Utility Operators
     register(OBJECT_OT_cycle_items)
@@ -149,10 +150,6 @@ def register():
     bpy.utils.register_class(SCULPT_OT_selected_vert_mask_tool)
     bpy.utils.register_class(SCULPT_OT_FaceSetToVertGroups)
 
-    # Append Menus
-    bpy.types.VIEW3D_MT_mask.append(flops_mask_menu)
-    bpy.types.MESH_MT_vertex_group_context_menu.append(vertex_groups_menu)
-    bpy.utils.register_class(MESH_MT_flops_vertex_groups)
 
     # Outliner Menus
     for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
@@ -168,6 +165,8 @@ def register():
 
     kmi = km.keymap_items.new("wm.call_menu", type="C", value="PRESS", ctrl=True, shift=True)
     kmi.properties.name = "VIEW3D_MT_CycleItemsPanel"
+
+    flops_menus_register()  # <-- Add this at the end of register()
 
 
 def unregister():
@@ -193,6 +192,7 @@ def unregister():
     unregister(OBJECT_OT_mirror_Crease)
     unregister(OBJECT_OT_mirror_Extract)
     unregister(OBJECT_OT_mirror_MergeByCenter)
+    unregister_blend_normals()
 
     # Utility Operators
     unregister(OBJECT_OT_cycle_items)
@@ -218,10 +218,6 @@ def unregister():
     bpy.utils.unregister_class(SCULPT_OT_selected_vert_mask_tool)
     bpy.utils.unregister_class(SCULPT_OT_FaceSetToVertGroups)
 
-    # Remove Menus
-    bpy.types.VIEW3D_MT_mask.remove(flops_mask_menu)
-    bpy.types.MESH_MT_vertex_group_context_menu.remove(vertex_groups_menu)
-    bpy.utils.unregister_class(MESH_MT_flops_vertex_groups)
 
     # Outliner Menus
     for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
@@ -240,6 +236,8 @@ def unregister():
             if kmi.idname == "wm.call_menu" and kmi.properties.name == "VIEW3D_MT_CycleItemsPanel":
                 km.keymap_items.remove(kmi)
                 break
+
+    flops_menus_unregister()  # <-- Add this at the end of unregister()
 
 
 if __name__ == "__main__":
