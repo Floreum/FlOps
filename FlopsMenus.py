@@ -20,7 +20,7 @@ class MESH_FLOPS_vertex_groups(bpy.types.Menu):
         layout = self.layout
         layout.operator("sculpt.face_set_from_vert_groups", text="Vertex Groups from Face Sets")
         layout.operator("sculpt.weights_to_face_sets", text="Weights to Face Sets")
-        layout.operator("mesh.select_boundary_blend", text="Select Boundary and Blend Normals")
+        layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
     
 def flops_vertex_groups_menu(self, context):
     self.layout.menu(MESH_FLOPS_vertex_groups.bl_idname)
@@ -28,12 +28,12 @@ def flops_vertex_groups_menu(self, context):
 def flops_make_links_menu(self, context):
     self.layout.separator()
     self.layout.label(text="FlOps")
-    self.layout.operator("mesh.select_boundary_blend", text="Select Boundary and Blend Normals")
+    self.layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
 
 def flops_make_single_user_menu(self, context):
     self.layout.separator()
     self.layout.label(text="FlOps")
-    self.layout.operator("mesh.select_boundary_blend", text="Select Boundary and Blend Normals")
+    self.layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
 
 def register():
     bpy.types.VIEW3D_MT_mask.append(flops_mask_menu)

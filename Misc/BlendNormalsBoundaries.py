@@ -5,7 +5,7 @@ from bpy.types import Operator
 class OBJECT_FLOPS_normal_blend(Operator):
     """Select Boundary Blend Normal"""
     bl_idname = "mesh.select_boundary_blend"
-    bl_label = "Select Boundary and Blend normals to another object"
+    bl_label = "Blend normals of the selected objects boundary to another object"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
