@@ -10,8 +10,6 @@ from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
 from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 
 from .sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials, OBJECT_OT_SanitizeAllNames
-from .sync_visibility import OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu, draw_sync_visibility_menu
-
 from .temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into its own UI menus
 
 from .vertex_snap import OBJECT_OT_vertex_snap
@@ -95,7 +93,6 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         
         layout.separator()
         operator("object.vertex_color_selection")
-        operator(OBJECT_OT_FaceSetFromVertGroups.bl_idname)
-        
-        
-        
+
+
+

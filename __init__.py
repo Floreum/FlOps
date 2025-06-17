@@ -1,7 +1,7 @@
 bl_info = {
     "name": "FlOps",
     "author": "Floreum",
-    "description": "This is a test",
+    "description": "Floreum's operators that I use frequently to speed up my personal workflow and address some of the shortcomings of Blenders symmetry.",
     "blender": (4, 0, 0),
     "version": (0, 1, 0),
     "location": "",
@@ -33,10 +33,8 @@ from .sanitize_mesh_names import (
     OBJECT_OT_SanitizeAllNames,
 )
 from .sync_visibility import (
-    OUTLINER_SyncRenderWithView,
-    OUTLINER_SyncViewWithRender,
-    VIEW3D_MT_SyncVisibilityMenu,
-    draw_sync_visibility_menu,
+    register as register_sync_visibility,
+    unregister as unregister_sync_visibility,
 )
 from .temp_layout import (
     OBJECT_OT_cycle_items,
@@ -46,7 +44,7 @@ from .temp_layout import (
     OBJECT_OT_ripedgemove,
 )
 from .vertex_snap import OBJECT_OT_vertex_snap
-from .Misc.BlendNormalsBoundaries import register as register_blend_normals, unregister as unregister_blend_normals
+from .VertexGroups.BlendNormalsBoundaries import register as register_blend_normals, unregister as unregister_blend_normals
 
 # Weight Painting Operators
 from .DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
@@ -152,10 +150,7 @@ def register():
 
 
     # Outliner Menus
-    for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
-        register(menu)
-
-    bpy.types.OUTLINER_HT_header.append(draw_sync_visibility_menu)
+    register_sync_visibility()
 
     # Keymaps
     wm = bpy.context.window_manager
@@ -220,11 +215,7 @@ def unregister():
 
 
     # Outliner Menus
-    for menu in [OUTLINER_SyncRenderWithView, OUTLINER_SyncViewWithRender, VIEW3D_MT_SyncVisibilityMenu]:
-        if menu.bl_rna:  # Ensure the operator class is registered
-            return
-
-    bpy.types.OUTLINER_HT_header.remove(draw_sync_visibility_menu)
+    unregister_sync_visibility()
 
     # Keymaps
     wm = bpy.context.window_manager
