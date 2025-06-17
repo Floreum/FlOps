@@ -16,53 +16,53 @@ import blf
 # Organized list of imports
 
 # General Operators
-from .delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
-from .dissolve_ops import (
+from .MirrorOps.delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
+from .MirrorOps.dissolve_ops import (
     OBJECT_OT_mirror_merge,
     OBJECT_OT_mirror_DissolveEdges,
     OBJECT_OT_mirror_DissolveLimited,
     OBJECT_OT_mirror_DissolveVerts,
 )
-from .MergeCenter import OBJECT_OT_mirror_MergeByCenter
-from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
+from .MirrorOps.MergeCenter import OBJECT_OT_mirror_MergeByCenter
+from .MirrorOps.mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 
 # Utility Operators
-from .sanitize_mesh_names import (
+from .Misc.sanitize_mesh_names import (
     OBJECT_OT_SanitizeName,
     OBJECT_OT_RemoveAllMaterials,
     OBJECT_OT_SanitizeAllNames,
 )
-from .sync_visibility import (
+from .UI_Additions.sync_visibility import (
     register as register_sync_visibility,
     unregister as unregister_sync_visibility,
 )
-from .temp_layout import (
+from .UI_Additions.temp_layout import (
     OBJECT_OT_cycle_items,
     OBJECT_OT_mirror_Crease,
     OBJECT_OT_mirror_Extract,
     OBJECT_OT_mirror_UVSeams,
     OBJECT_OT_ripedgemove,
 )
-from .vertex_snap import OBJECT_OT_vertex_snap
+from .VertexGroups.vertex_snap import OBJECT_OT_vertex_snap
 from .VertexGroups.BlendNormalsBoundaries import register as register_blend_normals, unregister as unregister_blend_normals
 
 # Weight Painting Operators
-from .DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
-from .transfer_mode_weightpaint import register as register_transfer_mode_wp, unregister as unregister_transfer_mode_wp
+from .VertexGroups.DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
+from .VertexGroups.transfer_mode_weightpaint import register as register_transfer_mode_wp, unregister as unregister_transfer_mode_wp
 
 # Experimental Operators
-from .VertexColSelection import OBJECT_OT_VertexColorSelection
+from .VertexGroups.VertexColSelection import OBJECT_OT_VertexColorSelection
 from .UI_Additions.SetAttributes import register as register_setattr, unregister as unregister_setattr
-from .UI_Additions.SetOrigin import register as register_setorigin, unregister as unregister_setorigin
+from .Misc.SetOrigin import register as register_setorigin, unregister as unregister_setorigin
 
 # Sculpting Operators
-from .VertGroupsFromFaceSets import SCULPT_OT_FaceSetToVertGroups
-from .MaskSelectedVerts import SCULPT_OT_selected_vert_mask_tool
-from .Weights2FaceSets import SCULPT_OT_Weights2FaceSets
+from .VertexGroups.VertGroupsFromFaceSets import SCULPT_OT_FaceSetToVertGroups
+from .Sculpting.MaskSelectedVerts import SCULPT_OT_selected_vert_mask_tool
+from .VertexGroups.Weights2FaceSets import SCULPT_OT_Weights2FaceSets
 
 # Menus
-from .ui import VIEW3D_MT_MirrorDelete, VIEW3D_MT_CycleItemsPanel
-from .FlopsMenus import register as flops_menus_register, unregister as flops_menus_unregister
+from .UI.ui_main import register as register_ui, unregister as unregister_ui
+from .UI.FlopsMenus import register as flops_menus_register, unregister as flops_menus_unregister
 
 # Properties
 bpy.types.Scene.mirrorOP = bpy.props.BoolProperty(
@@ -104,8 +104,7 @@ def register():
     register = bpy.utils.register_class
 
     # Menus
-    register(VIEW3D_MT_MirrorDelete)
-    register(VIEW3D_MT_CycleItemsPanel)
+    register_ui()
 
     # Properties
     register(MirrorAxisProperty)
@@ -168,9 +167,8 @@ def unregister():
     unregister = bpy.utils.unregister_class
 
     # Menus
-    unregister(VIEW3D_MT_MirrorDelete)
-    unregister(VIEW3D_MT_CycleItemsPanel)
-
+    unregister_ui()
+    
     # Properties
     unregister(MirrorAxisProperty)
     del bpy.types.Scene.mirror_axis
@@ -219,14 +217,16 @@ def unregister():
 
     # Keymaps
     wm = bpy.context.window_manager
-    km = wm.keyconfigs.addon.keymaps.new(name="3D View", space_type="VIEW_3D")
+    km = wm.keyconfigs.addon.keymaps.get("3D View")
     if km:
+        to_remove = []
         for kmi in km.keymap_items:
-            if kmi.idname == "wm.call_menu" and kmi.properties.name == "VIEW3D_MT_MirrorDelete":
-                km.keymap_items.remove(kmi)
-            if kmi.idname == "wm.call_menu" and kmi.properties.name == "VIEW3D_MT_CycleItemsPanel":
-                km.keymap_items.remove(kmi)
-                break
+            if kmi.idname == "wm.call_menu" and getattr(kmi.properties, "name", "") in {
+                "VIEW3D_MT_MirrorDelete", "VIEW3D_MT_CycleItemsPanel"
+            }:
+                to_remove.append(kmi)
+        for kmi in to_remove:
+            km.keymap_items.remove(kmi)
 
     flops_menus_unregister()  # <-- Add this at the end of unregister()
 

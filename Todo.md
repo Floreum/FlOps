@@ -9,3 +9,5 @@
 - Rework Local View Deluxe to work in this script
 - Maybe rework my camera options menu into this as well
 - Convert EyeIcon.png to SVG
+- View3D_LatticeMirrorOperator doesn't have any UI element to activate it
+- MergeLast doesn't have any classes to activate it via UI

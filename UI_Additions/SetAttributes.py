@@ -27,21 +27,21 @@ class MESH_OT_attribute_set(bpy.types.Operator):
             return {'CANCELLED'}
 
         attr = obj.data.attributes.active
-        props = context.scene.my_attributes
+        props = context.scene.set_attributes
 
         # Detect attribute type and get value
         # Need more types added
         if attr.data_type == 'FLOAT':
-            value = context.scene.my_attributes.attrvalue_float
+            value = context.scene.set_attributes.attrvalue_float
             bpy.ops.mesh.attribute_set(value_float=value)
         elif attr.data_type == 'INT':
-            value = context.scene.my_attributes.attrvalue_int
+            value = context.scene.set_attributes.attrvalue_int
             bpy.ops.mesh.attribute_set(value_int=value)
         elif attr.data_type == 'BOOLEAN':
-            value = context.scene.my_attributes.attrvalue_bool
+            value = context.scene.set_attributes.attrvalue_bool
             bpy.ops.mesh.attribute_set(value_bool=value)
         elif attr.data_type == 'FLOAT_COLOR':
-            value = context.scene.my_attributes.attrvalue_color
+            value = context.scene.set_attributes.attrvalue_color
             bpy.ops.mesh.attribute_set(value_color=value)
         else:
             self.report({'ERROR'}, "Unsupported attribute type")
@@ -51,9 +51,9 @@ class MESH_OT_attribute_set(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class DATA_PT_my_attributes(bpy.types.Panel):
+class DATA_PT_set_attributes(bpy.types.Panel):
     bl_label = "My Attributes"
-    bl_idname = "DATA_PT_my_attributes"
+    bl_idname = "DATA_PT_set_attributes"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "mesh"
@@ -68,7 +68,7 @@ class DATA_PT_my_attributes(bpy.types.Panel):
         layout.label(text="Set Attributes")
         
         attr = obj.data.attributes.active
-        props = context.scene.my_attributes
+        props = context.scene.set_attributes
         
         row = layout.row(align=True)
         if attr.data_type == 'FLOAT':
@@ -82,27 +82,27 @@ class DATA_PT_my_attributes(bpy.types.Panel):
         row.operator("mesh.attribute_set_operator", text="Set")
 
 
-classes = [AttributeSetProps, MESH_OT_attribute_set, DATA_PT_my_attributes]
+classes = [AttributeSetProps, MESH_OT_attribute_set, DATA_PT_set_attributes]
 
 
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-    bpy.types.Scene.my_attributes = bpy.props.PointerProperty(type=AttributeSetProps)
+    bpy.types.Scene.set_attributes = bpy.props.PointerProperty(type=AttributeSetProps)
 
     # Append to the existing Mesh Attributes panel
-    bpy.types.DATA_PT_mesh_attributes.append(DATA_PT_my_attributes.draw)
+    bpy.types.DATA_PT_mesh_attributes.append(DATA_PT_set_attributes.draw)
 
 
 def unregister():
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
 
-    del bpy.types.Scene.my_attributes
+    del bpy.types.Scene.set_attributes
 
     # Remove from Mesh Attributes panel
-    bpy.types.DATA_PT_mesh_attributes.remove(DATA_PT_my_attributes.draw)
+    bpy.types.DATA_PT_mesh_attributes.remove(DATA_PT_set_attributes.draw)
 
 
 if __name__ == "__main__":

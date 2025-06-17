@@ -1,7 +1,7 @@
 import bpy
 import blf
 from bpy.types import Operator, Panel, Menu
-from .mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
+from ..MirrorOps.mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 
 ## I need to make a check for menu items to show up when in edit/object mode
 
