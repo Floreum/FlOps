@@ -11,3 +11,4 @@
 - Convert EyeIcon.png to SVG
 - View3D_LatticeMirrorOperator doesn't have any UI element to activate it
 - MergeLast doesn't have any classes to activate it via UI
+- Need to add a 'Keep Boundary' option for Blend Normal

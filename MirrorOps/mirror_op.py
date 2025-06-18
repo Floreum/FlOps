@@ -11,7 +11,7 @@ class OBJECT_OT_MirrorOperator(Operator):
         
         # Check if the active object is valid and has mesh data
         if active_obj and active_obj.type == 'MESH':
-            # Determine which mirror axes are enabled
+            # Determine which mirror axis is enabled
             mirror_axis = set()
             bpy.types.Scene.mirrorOP = True
             if active_obj.use_mesh_mirror_x:

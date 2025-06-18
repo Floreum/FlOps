@@ -10,7 +10,7 @@ from ..MirrorOps.MergeCenter import OBJECT_OT_mirror_MergeByCenter
 from ..MirrorOps.mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
 
 from ..Misc.sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials, OBJECT_OT_SanitizeAllNames
-from ..UI_Additions.temp_layout import OBJECT_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into its own UI menus
+from ..UI_Additions.temp_layout import MESH_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into its own UI menus
 
 from ..VertexGroups.vertex_snap import OBJECT_OT_vertex_snap
 from ..VertexGroups.VertexColSelection import OBJECT_OT_VertexColorSelection
@@ -50,7 +50,9 @@ class VIEW3D_MT_MirrorDelete(Menu):
         operator(OBJECT_OT_mirror_DissolveVerts.bl_idname)
         
         separator()
-        operator(OBJECT_OT_cycle_items.bl_idname)
+        layout.operator_context = 'INVOKE_DEFAULT'  # <-- Add this line before your modal operator
+        operator(MESH_OT_cycle_items.bl_idname)
+        layout.operator_context = 'EXEC_DEFAULT'    # <-- Optional: reset to default if needed
         operator(OBJECT_OT_mirror_merge.bl_idname)
         operator(OBJECT_OT_vertex_snap.bl_idname)
         

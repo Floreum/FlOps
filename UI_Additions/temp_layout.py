@@ -1,78 +1,27 @@
 import bpy
 import blf
+import bgl
 from bpy.types import Operator, Panel, Menu
 from ..MirrorOps.mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
+import bmesh
 
 ## I need to make a check for menu items to show up when in edit/object mode
 
-class OBJECT_OT_cycle_items(Operator):
-    """Cycle Through Items Operator"""
+class MESH_OT_cycle_items(Operator):
+    """Cycle through mesh elements with the mouse wheel"""
     bl_idname = "mesh.cycle_items"
     bl_label = "Cycle Items"
     bl_options = {'REGISTER', 'UNDO'}
 
-    def __init__(self):
-        self._item_index = 0  
-        self._txt_activate = None
-        self._txt_instr = None
+    _handle1 = None
+    _handle2 = None
+    _handle3 = None
 
-    def invoke(self, context, event):
-        return context.window_manager.invoke_props_dialog(self)
 
-    def execute(self, context):
-        context.scene.run_check = True
-        
-        context.scene.cycle_mode_active = True
-        if self._txt_activate is None:
-            self._txt_activate = bpy.types.SpaceView3D.draw_handler_add(self.draw_text_activate, (context,), 'WINDOW', 'POST_PIXEL')
-            context.area.tag_redraw()
-
-        if self._txt_instr is None:
-            self._txt_instr = bpy.types.SpaceView3D.draw_handler_add(self.draw_text_activate_instruct, (context,), 'WINDOW', 'POST_PIXEL')
-            context.area.tag_redraw()
-        
-        context.window_manager.modal_handler_add(self)
-        
-        return {'RUNNING_MODAL'}
-
-    def modal(self, context, event):
-        run_check = context.scene.run_check
-        
-        if event.type == 'WHEELUPMOUSE':
-            bpy.ops.mesh.select_next_item()
-            self._item_index += 1
-        elif event.type == 'WHEELDOWNMOUSE':
-            bpy.ops.mesh.select_prev_item()
-            self._item_index -= 1
-        elif event.type in {'LEFTMOUSE', 'RET'} and event.value == 'PRESS':
-            self.report({'INFO'}, "Item selected: {}".format(self._item_index))
-            context.scene.cycle_mode_active = False
-            
-            bpy.ops.mesh.loop_multi_select(ring=True)
-            bpy.ops.object.mirror_op()
-            
-            if self._txt_activate:
-                bpy.types.SpaceView3D.draw_handler_remove(self._txt_activate, 'WINDOW')
-                bpy.types.SpaceView3D.draw_handler_remove(self._txt_instr, 'WINDOW')
-                self._txt_activate = None
-                context.area.tag_redraw()
-                
-                
-                
-            return {'FINISHED'}
-        elif event.type in {'ESC', 'RIGHTMOUSE'} and event.value == 'PRESS':
-            self.report({'INFO'}, "Operation cancelled")
-            context.scene.cycle_mode_active = False
-            if self._txt_activate:
-                bpy.types.SpaceView3D.draw_handler_remove(self._txt_activate, 'WINDOW')
-                bpy.types.SpaceView3D.draw_handler_remove(self._txt_instr, 'WINDOW')
-                self._txt_activate = None
-                context.area.tag_redraw()
-                
-                
-            return {'CANCELLED'}
-        
-        return {'RUNNING_MODAL'}
+    @classmethod
+    def poll(cls, context):
+        obj = context.active_object
+        return obj and obj.type == 'MESH' and context.mode == 'EDIT_MESH'
 
     def draw_text_activate(self, context):
         space = context.space_data
@@ -81,15 +30,102 @@ class OBJECT_OT_cycle_items(Operator):
         blf.size(font_id, 20)
         blf.color(font_id, 0.0, 1.0, 0.0, 0.5)
         blf.draw(font_id, "Cycle Mode")
-        
+
     def draw_text_activate_instruct(self, context):
         space = context.space_data
         font_id = 1
+        dpi = context.preferences.system.dpi
+        dpi_scale = dpi / 65.0
+
+        # First line
         blf.position(font_id, 0.05 * context.region.width, 0.3 * context.region.height, 0)
-        blf.size(font_id, 12)
-        blf.color(font_id, 1.0, 1.0, 1.0, 0.8)
-        blf.draw(font_id, "MMB + scroll wheel to cycle edges")
+        blf.size(font_id, int(12 * dpi_scale))
+        blf.color(font_id, 1.0, 1.0, 0.8, 1.0)
+        blf.draw(font_id, "Scroll wheel up/down to cycle edges")
+        # Second line
+        blf.position(font_id, 0.05 * context.region.width, 0.27 * context.region.height, 0)
+        blf.draw(font_id, "ESC/Right Click to cancel, Left Click to confirm")
+
+    def draw_text_edge_ring(self, context):
+        space = context.space_data
+        font_id = 1
+        dpi = context.preferences.system.dpi
+        dpi_scale = dpi / 65.0
         
+        status = "(ON)" if self.edge_ring_mode else "(OFF)"
+        blf.position(font_id, 0.05 * context.region.width, 0.24 * context.region.height, 0)
+        blf.size(font_id, (12 * dpi_scale))
+        blf.color(font_id, 1.0, 1.0, 0.8, 1.0)
+        blf.draw(font_id, f"(e) Edge Ring {status}")
+
+    def modal(self, context, event):
+        obj = context.active_object
+        bm = bmesh.from_edit_mesh(obj.data)
+
+        if event.type in {'ESC', 'RIGHTMOUSE'}:
+            for elem in bm.edges:
+                elem.select_set(elem.index in self.initial_selection)
+            bmesh.update_edit_mesh(obj.data)
+            self.report({'INFO'}, "Cycle Items Cancelled (Selection Restored)")
+            self.remove_draw_handlers()
+            return {'CANCELLED'}
+
+        if event.type == 'LEFTMOUSE':
+            # Perform edge ring selection if enabled
+            if self.edge_ring_mode:
+                bpy.ops.mesh.loop_multi_select(ring=True)
+            # Only mirror on confirm
+            if context.scene.mirrorOP:
+                bpy.ops.object.mirror_op()
+            self.report({'INFO'}, f"Cycle Items Finished (Edge Ring {'ON' if self.edge_ring_mode else 'OFF'})")
+            self.remove_draw_handlers()
+            return {'FINISHED'}
+
+        if event.type == 'E' and event.value == 'PRESS':
+            self.edge_ring_mode = not self.edge_ring_mode
+            if context.area:
+                context.area.tag_redraw()
+            return {'RUNNING_MODAL'}
+
+        if event.type == 'WHEELDOWNMOUSE':
+            bpy.ops.mesh.select_prev_item()
+            return {'RUNNING_MODAL'}
+        elif event.type == 'WHEELUPMOUSE':
+            bpy.ops.mesh.select_next_item()
+            return {'RUNNING_MODAL'}
+
+        return {'PASS_THROUGH'}
+
+    def invoke(self, context, event):
+        obj = context.active_object
+        bm = bmesh.from_edit_mesh(obj.data)
+        self.initial_selection = {e.index for e in bm.edges if e.select}
+        self.edge_ring_mode = False
+        self._handle1 = bpy.types.SpaceView3D.draw_handler_add(
+            self.draw_text_activate, (context,), 'WINDOW', 'POST_PIXEL'
+        )
+        self._handle2 = bpy.types.SpaceView3D.draw_handler_add(
+            self.draw_text_activate_instruct, (context,), 'WINDOW', 'POST_PIXEL'
+        )
+        self._handle3 = bpy.types.SpaceView3D.draw_handler_add(
+            self.draw_text_edge_ring, (context,), 'WINDOW', 'POST_PIXEL'
+        )
+        context.window_manager.modal_handler_add(self)
+        if context.area:
+            context.area.tag_redraw()
+        return {'RUNNING_MODAL'}
+
+    def remove_draw_handlers(self):
+        if self._handle1 is not None:
+            bpy.types.SpaceView3D.draw_handler_remove(self._handle1, 'WINDOW')
+            self._handle1 = None
+        if self._handle2 is not None:
+            bpy.types.SpaceView3D.draw_handler_remove(self._handle2, 'WINDOW')
+            self._handle2 = None
+        if self._handle3 is not None:
+            bpy.types.SpaceView3D.draw_handler_remove(self._handle3, 'WINDOW')
+            self._handle3 = None
+
 class OBJECT_OT_mirror_UVSeams(Operator):
     """Mirror Delete UV Seam Operator"""
     bl_idname = "mesh.mirror_uv_seam"
@@ -192,4 +228,20 @@ class OBJECT_OT_mirror_Extract(Operator):
         bpy.ops.object.mode_set(mode='EDIT')
         
         return {'FINISHED'}
-          
+    
+def register():
+    bpy.utils.register_class(MESH_OT_cycle_items)
+    bpy.utils.register_class(OBJECT_OT_mirror_UVSeams)
+    bpy.utils.register_class(OBJECT_OT_mirror_Crease)
+    bpy.utils.register_class(OBJECT_OT_ripedgemove)
+    bpy.utils.register_class(OBJECT_OT_mirror_Extract)
+
+def unregister():
+    bpy.utils.unregister_class(MESH_OT_cycle_items)
+    bpy.utils.unregister_class(OBJECT_OT_mirror_UVSeams)
+    bpy.utils.unregister_class(OBJECT_OT_mirror_Crease)
+    bpy.utils.unregister_class(OBJECT_OT_ripedgemove)
+    bpy.utils.unregister_class(OBJECT_OT_mirror_Extract)
+
+if __name__ == "__main__":
+    register()

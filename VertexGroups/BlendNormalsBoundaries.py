@@ -120,6 +120,12 @@ class OBJECT_FLOPS_normal_blend(Operator):
         else:
             bpy.ops.object.mode_set(mode='OBJECT')
         
+        print("Scene unit scale:", bpy.context.scene.unit_settings.scale_length)
+        print("Target object matrix_world:", obj.matrix_world)
+        print("Source object matrix_world:", source.matrix_world)
+        print("Target parent:", obj.parent)
+        print("Source parent:", source.parent)
+        
     # Draw the operator panel in the UI    
     def draw(self, context):
         layout = self.layout

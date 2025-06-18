@@ -36,13 +36,7 @@ from .UI_Additions.sync_visibility import (
     register as register_sync_visibility,
     unregister as unregister_sync_visibility,
 )
-from .UI_Additions.temp_layout import (
-    OBJECT_OT_cycle_items,
-    OBJECT_OT_mirror_Crease,
-    OBJECT_OT_mirror_Extract,
-    OBJECT_OT_mirror_UVSeams,
-    OBJECT_OT_ripedgemove,
-)
+from .UI_Additions.temp_layout import register as register_temp_layout, unregister as unregister_temp_layout
 from .VertexGroups.vertex_snap import OBJECT_OT_vertex_snap
 from .VertexGroups.BlendNormalsBoundaries import register as register_blend_normals, unregister as unregister_blend_normals
 
@@ -118,15 +112,11 @@ def register():
     register(OBJECT_OT_mirror_DissolveVerts)
     register(OBJECT_OT_mirror_DeleteVerts)
     register(OBJECT_OT_mirror_DeleteFaces)
-    register(OBJECT_OT_mirror_UVSeams)
-    register(OBJECT_OT_mirror_Crease)
-    register(OBJECT_OT_mirror_Extract)
+    register_temp_layout()
     register(OBJECT_OT_mirror_MergeByCenter)
     register_blend_normals()
 
     # Utility Operators
-    register(OBJECT_OT_cycle_items)
-    register(OBJECT_OT_ripedgemove)
     register(OBJECT_OT_SanitizeName)
     register(OBJECT_OT_RemoveAllMaterials)
     register(OBJECT_OT_vertex_snap)
@@ -181,15 +171,11 @@ def unregister():
     unregister(OBJECT_OT_mirror_DissolveVerts)
     unregister(OBJECT_OT_mirror_DeleteVerts)
     unregister(OBJECT_OT_mirror_DeleteFaces)
-    unregister(OBJECT_OT_mirror_UVSeams)
-    unregister(OBJECT_OT_mirror_Crease)
-    unregister(OBJECT_OT_mirror_Extract)
+    unregister_temp_layout()
     unregister(OBJECT_OT_mirror_MergeByCenter)
     unregister_blend_normals()
 
     # Utility Operators
-    unregister(OBJECT_OT_cycle_items)
-    unregister(OBJECT_OT_ripedgemove)
     unregister(OBJECT_OT_SanitizeName)
     unregister(OBJECT_OT_RemoveAllMaterials)
     unregister(OBJECT_OT_vertex_snap)
