@@ -17,6 +17,8 @@ import blf
 
 # Organized list of imports
 from .prefs import register as prefs_register, unregister as prefs_unregister
+from .Preferences import Keymaps
+
 
 # Menus
 from .UI.ui_main import register as register_ui, unregister as unregister_ui
@@ -52,11 +54,11 @@ from .VertexGroups.Weights2FaceSets import register as register_weights_to_face_
 
 
 # Properties
-# bpy.types.Scene.mirrorOP = bpy.props.BoolProperty(
-#     name="Enable Mirror",
-#     description="Turns on mirroring for every operation",
-#     default=True,
-# )
+bpy.types.Scene.mirrorOP = bpy.props.BoolProperty(
+    name="Enable Mirror",
+    description="Turns on mirroring for every operation",
+    default=True,
+)
 
 bpy.types.Scene.enableUV = bpy.props.BoolProperty(
     name="Preserve UVs",
@@ -86,35 +88,11 @@ bpy.types.Scene.run_check = bpy.props.BoolProperty(
 def draw_func(self, context):
     self.layout.menu("VIEW3D_MT_MirrorDelete")  # Need to move this
 
-keymaps = []
+
 
 cycle_items_kmi = None
 
 
-def setup_keymaps():
-    wm = bpy.context.window_manager
-    kc = wm.keyconfigs.addon
-    if not kc:
-        return
-
-    km = kc.keymaps.new(name="3D View", space_type="VIEW_3D")
-
-    # Always add the Mirror Delete menu keymap
-    kmi = km.keymap_items.new("wm.call_menu", type="X", value="PRESS", ctrl=True, shift=True)
-    kmi.properties.name = "VIEW3D_MT_MirrorDelete"
-    keymaps.append((km, kmi))
-
-    # Add CycleItemsPanel keymap if preference enabled
-    addon_prefs = bpy.context.preferences.addons[__name__].preferences
-    if addon_prefs.enable_cycle_items_panel:
-        kmi = km.keymap_items.new("wm.call_menu", type="C", value="PRESS", ctrl=True, shift=True)
-        kmi.properties.name = "VIEW3D_MT_CycleItemsPanel"
-        keymaps.append((km, kmi))
-
-def remove_keymaps():
-    for km, kmi in keymaps:
-        km.keymap_items.remove(kmi)
-    keymaps.clear()
 
 
 def register():
@@ -159,7 +137,7 @@ def register():
     # Outliner Menus
     register_sync_visibility()
     
-    setup_keymaps()
+    Keymaps.setup_keymaps(__name__)
 
     
 
@@ -207,7 +185,9 @@ def unregister():
     # Outliner Menus
     unregister_sync_visibility()
     
-    remove_keymaps()
+    Keymaps.remove_keymaps()
+    
+    
     
     
 

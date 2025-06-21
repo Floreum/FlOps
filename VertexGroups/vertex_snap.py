@@ -4,7 +4,8 @@ import bmesh
 
 class OBJECT_OT_vertex_snap(Operator):
     bl_idname = "object.vertex_snap_and_shrinkwrap"
-    bl_label = "Add Vertex Group and Shrinkwrap"
+    bl_label = "Shrinkwrap to Selected"
+    bl_description = "Snap selected vertices to the last selected mesh object and apply a shrinkwrap modifier"
     bl_options = {'REGISTER', 'UNDO'}
     
     vertex_group_name: bpy.props.StringProperty(

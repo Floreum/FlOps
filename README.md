@@ -4,6 +4,7 @@ A collection of operators that I wanted to make to speed up my workflow
 ## Cycle Items
 A better version of Select Next/Previous, instead of using numpad +/- to grow/shrink your selection you can use your mouse wheel.
 On top of that you also have access to symmetry and selecting an entire edge ring after confirmation. 
+
 ** Currently you can find it in the hotkey Ctrl + Shift + X (this is subject to change)**
 
 ![Cycle Items](media/images/Cycle_Items.gif)
@@ -22,6 +23,13 @@ First select the source mesh, and then shift select your target mesh, then you h
 Alternatively you can also find it under your Properterties tab > Data > Vertex Groups, then click the down arrow and select it in the FlOps menu
 
 ![BlendNormals Vertex Groups](media/images/BlendNormals_VG.png)
+
+## Shrinkwrap to Selected
+If you've ever made edits to a character mesh, sometimes you need a way to easily fit polygon hairs back onto the head. With this you can go into edit mode and select the roots, then back in object mode select the source then target mesh, then select "Shrinkwrap to Selected". In the future I'll add a  way to offset to the operator box to adjust the offset and an auto apply for the modifier.
+
+** Currently you can find it in the hotkey Ctrl + Shift + X (this is subject to change)**
+
+![Shrinkwarap to Selected](media/images/Shrinkwrap_to_selected.gif)
 
 ## Sync Visibility
 Sometimes you just can't figure out what is appearing in a final render and don't remember what the object is called or where it got burried.
