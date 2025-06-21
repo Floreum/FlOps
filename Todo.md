@@ -1,0 +1,14 @@
+- I need to make a check for menu items to show up when in edit/object mode in temp_layout
+- Figure out a better name for temp_layout or get rid of it and factor items into existing menus
+- Need to figure out why this isn't working on the object level first, probably should take it out of the objects for loops
+- Reorganize the scripts into appropriate folders
+- Fix when no objects are selected rename popup warning
+- Figure out how to make MergeCenter use other axis.
+- Change all older scripts to register on import
+- Change BlendNormals to have an option to apply the modifier immediately and also have the option for Mapping type
+- Rework Local View Deluxe to work in this script
+- Maybe rework my camera options menu into this as well
+- Convert EyeIcon.png to SVG
+- View3D_LatticeMirrorOperator doesn't have any UI element to activate it
+- MergeLast doesn't have any classes to activate it via UI
+- Need to add a 'Keep Boundary' option for Blend Normal
