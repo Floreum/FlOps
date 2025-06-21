@@ -30,3 +30,17 @@ class OBJECT_OT_MirrorOperator(Operator):
         
 class MirrorAxisProperty(bpy.types.PropertyGroup):
     axis: bpy.props.StringProperty(name="Mirror Axis")
+    
+    
+def register():
+    bpy.utils.register_class(OBJECT_OT_MirrorOperator)
+    bpy.utils.register_class(MirrorAxisProperty)
+
+def unregister():
+    bpy.utils.unregister_class(OBJECT_OT_MirrorOperator)
+    bpy.utils.unregister_class(MirrorAxisProperty)
+    if hasattr(bpy.types.Scene, "mirror_axis"):
+        del bpy.types.Scene.mirror_axis
+
+if __name__ == "__main__":
+    register()

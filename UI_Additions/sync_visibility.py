@@ -9,10 +9,11 @@ def get_eye_icon():
     pcoll = preview_collections.get("main")
     if not pcoll:
         pcoll = bpy.utils.previews.new()
-        icons_dir = os.path.join(os.path.dirname(__file__), "icons")
+        icons_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "icons")
         sync_icon_path = os.path.join(icons_dir, "sync_view.svg")
         pcoll.load("sync_view", sync_icon_path, 'IMAGE')
         preview_collections["main"] = pcoll
+
     return pcoll["sync_view"].icon_id
 
 def clear_icons():
@@ -48,8 +49,9 @@ class OUTLINER_MT_SyncVisibilityMenu(bpy.types.Menu):
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("view3d.draw_sync_view_render", text="Viewport <- Render", icon="RESTRICT_VIEW_OFF")
-        layout.operator("view3d.draw_sync_render_view", text="Viewport -> Render", icon="RESTRICT_RENDER_OFF")
+        layout.label(text="FlOps Sync Visibility")
+        layout.operator("view3d.draw_sync_view_render", text="Viewport  👈  Render", icon="RESTRICT_VIEW_OFF")
+        layout.operator("view3d.draw_sync_render_view", text="Viewport  👉  Render", icon="RESTRICT_RENDER_OFF")
 
 def draw_sync_visibility_button(self, context):
     layout = self.layout
@@ -58,10 +60,10 @@ def draw_sync_visibility_button(self, context):
     
 
 def register():
+    bpy.types.OUTLINER_HT_header.append(draw_sync_visibility_button)
     bpy.utils.register_class(OUTLINER_SyncRenderWithView)
     bpy.utils.register_class(OUTLINER_SyncViewWithRender)
     bpy.utils.register_class(OUTLINER_MT_SyncVisibilityMenu)
-    bpy.types.OUTLINER_HT_header.append(draw_sync_visibility_button)
 
 def unregister():
     bpy.types.OUTLINER_HT_header.remove(draw_sync_visibility_button)

@@ -27,7 +27,7 @@ class OBJECT_OT_mirror_DissolveLimited(Operator):
         bpy.ops.mesh.dissolve_limited()
         return {'FINISHED'}
     
-class OBJECT_OT_mirror_DissolveEdges(Operator): # broken? check later
+class OBJECT_OT_mirror_DissolveEdges(Operator): # need to open up the self reprot box with the angle settings
     """Mirror Dissolve Edge Operator"""
     bl_idname = "mesh.mirror_dissolve_edge"
     bl_label = "Dissolve Edges"
@@ -53,3 +53,17 @@ class OBJECT_OT_mirror_DissolveVerts(Operator):
         bpy.ops.mesh.dissolve_verts()
         return {'FINISHED'}
     
+def register():
+    bpy.utils.register_class(OBJECT_OT_mirror_merge)
+    bpy.utils.register_class(OBJECT_OT_mirror_DissolveLimited)
+    bpy.utils.register_class(OBJECT_OT_mirror_DissolveEdges)
+    bpy.utils.register_class(OBJECT_OT_mirror_DissolveVerts)
+
+def unregister():
+    bpy.utils.unregister_class(OBJECT_OT_mirror_merge)
+    bpy.utils.unregister_class(OBJECT_OT_mirror_DissolveLimited)
+    bpy.utils.unregister_class(OBJECT_OT_mirror_DissolveEdges)
+    bpy.utils.unregister_class(OBJECT_OT_mirror_DissolveVerts)
+
+if __name__ == "__main__":
+    register()

@@ -28,3 +28,17 @@ class OBJECT_OT_mirror_DeleteFaces(Operator):
         bpy.ops.mesh.delete(type='FACE')
         return {'FINISHED'}
     
+    
+def register():
+    bpy.utils.register_class(OBJECT_OT_mirror_DeleteVerts)
+    bpy.utils.register_class(OBJECT_OT_mirror_DeleteFaces)
+    
+    
+    # OBJECT_OT_MirrorOperator.register() 
+    
+def unregister():
+    bpy.utils.unregister_class(OBJECT_OT_mirror_DeleteVerts)
+    bpy.utils.unregister_class(OBJECT_OT_mirror_DeleteFaces)
+    
+    
+    # OBJECT_OT_MirrorOperator.unregister()

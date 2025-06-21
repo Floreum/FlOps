@@ -49,3 +49,9 @@ class OBJECT_OT_mirror_MergeByCenter(Operator):
         bpy.ops.mesh.select_mirror(extend=True)
         
         return {'FINISHED'}
+    
+def register():
+    bpy.utils.register_class(OBJECT_OT_mirror_MergeByCenter)
+
+def unregister():
+    bpy.utils.unregister_class(OBJECT_OT_mirror_MergeByCenter)

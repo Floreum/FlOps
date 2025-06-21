@@ -13,46 +13,39 @@ import bpy
 from bpy.types import Operator, Panel, Menu
 import blf
 
+# this whole registering system is a mess, but it works for now
+
 # Organized list of imports
+from .prefs import register as prefs_register, unregister as prefs_unregister
+from .prefs import FlOpsPreferences
+
 
 # General Operators
-from .MirrorOps.delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
-from .MirrorOps.dissolve_ops import (
-    OBJECT_OT_mirror_merge,
-    OBJECT_OT_mirror_DissolveEdges,
-    OBJECT_OT_mirror_DissolveLimited,
-    OBJECT_OT_mirror_DissolveVerts,
-)
-from .MirrorOps.MergeCenter import OBJECT_OT_mirror_MergeByCenter
-from .MirrorOps.mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
+from .MirrorOps.delete_ops import register as register_delete_ops, unregister as unregister_delete_ops
+from .MirrorOps.dissolve_ops import register as register_disolve_ops, unregister as unregister_disolve_ops
+from .MirrorOps.MergeCenter import register as register_mirror_merge, unregister as unregister_mirror_merge
+from .MirrorOps.mirror_op import register as register_mirroroperator, unregister as unregister_mirroroperator
 
 # Utility Operators
-from .Misc.sanitize_mesh_names import (
-    OBJECT_OT_SanitizeName,
-    OBJECT_OT_RemoveAllMaterials,
-    OBJECT_OT_SanitizeAllNames,
-)
-from .UI_Additions.sync_visibility import (
-    register as register_sync_visibility,
-    unregister as unregister_sync_visibility,
-)
+from .Misc.sanitize_mesh_names import register as register_sanitize_names, unregister as unregister_sanitize_names
+from .UI_Additions.sync_visibility import register as register_sync_visibility, unregister as unregister_sync_visibility
 from .UI_Additions.temp_layout import register as register_temp_layout, unregister as unregister_temp_layout
-from .VertexGroups.vertex_snap import OBJECT_OT_vertex_snap
+from .VertexGroups.vertex_snap import register as register_vertex_snap, unregister as unregister_vertex_snap
 from .VertexGroups.BlendNormalsBoundaries import register as register_blend_normals, unregister as unregister_blend_normals
 
 # Weight Painting Operators
-from .VertexGroups.DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
+from .VertexGroups.DeleteVertWeight import register as register_delete_vertex_weights, unregister as unregister_delete_vertex_weights
 from .VertexGroups.transfer_mode_weightpaint import register as register_transfer_mode_wp, unregister as unregister_transfer_mode_wp
 
 # Experimental Operators
-from .VertexGroups.VertexColSelection import OBJECT_OT_VertexColorSelection
+from .VertexGroups.VertexColSelection import register as register_vertex_color_selection, unregister as unregister_vertex_color_selection
 from .UI_Additions.SetAttributes import register as register_setattr, unregister as unregister_setattr
 from .Misc.SetOrigin import register as register_setorigin, unregister as unregister_setorigin
 
 # Sculpting Operators
-from .VertexGroups.VertGroupsFromFaceSets import SCULPT_OT_FaceSetToVertGroups
-from .Sculpting.MaskSelectedVerts import SCULPT_OT_selected_vert_mask_tool
-from .VertexGroups.Weights2FaceSets import SCULPT_OT_Weights2FaceSets
+from .VertexGroups.VertGroupsFromFaceSets import register as register_face_set_to_vert_groups, unregister as unregister_face_set_to_vert_groups
+from .Sculpting.MaskSelectedVerts import register as register_sculpt_mask_selected_verts, unregister as unregister_sculpt_mask_selected_verts
+from .VertexGroups.Weights2FaceSets import register as register_weights_to_face_sets, unregister as unregister_weights_to_face_sets
 
 # Menus
 from .UI.ui_main import register as register_ui, unregister as unregister_ui
@@ -91,51 +84,46 @@ bpy.types.Scene.run_check = bpy.props.BoolProperty(
 
 
 def draw_func(self, context):
-    self.layout.menu("VIEW3D_MT_MirrorDelete")
+    self.layout.menu("VIEW3D_MT_MirrorDelete")  # Need to move this
 
+
+cycle_items_kmi = None
 
 def register():
+    global cycle_items_kmi
     register = bpy.utils.register_class
+
+    # Preferences
+    prefs_register()
 
     # Menus
     register_ui()
 
-    # Properties
-    register(MirrorAxisProperty)
-    bpy.types.Scene.mirror_axis = bpy.props.CollectionProperty(type=MirrorAxisProperty)
-
     # General Operators
-    register(OBJECT_OT_MirrorOperator)
-    register(OBJECT_OT_mirror_merge)
-    register(OBJECT_OT_mirror_DissolveLimited)
-    register(OBJECT_OT_mirror_DissolveEdges)
-    register(OBJECT_OT_mirror_DissolveVerts)
-    register(OBJECT_OT_mirror_DeleteVerts)
-    register(OBJECT_OT_mirror_DeleteFaces)
+    register_mirroroperator()
+    register_disolve_ops()
+    register_delete_ops()
     register_temp_layout()
-    register(OBJECT_OT_mirror_MergeByCenter)
+    register_mirror_merge()
     register_blend_normals()
 
     # Utility Operators
-    register(OBJECT_OT_SanitizeName)
-    register(OBJECT_OT_RemoveAllMaterials)
-    register(OBJECT_OT_vertex_snap)
-    register(OBJECT_OT_SanitizeAllNames)
+    register_sanitize_names()
+    register_vertex_snap()
+    
 
     # Weight Painting Operators
-    register(OBJECT_OT_DeleteVertexGroupWeights)
-    register(OBJECT_OT_CopyVertexWeights)
     register_transfer_mode_wp()
 
     # Experimental Operators
-    register(OBJECT_OT_VertexColorSelection)
+    register_vertex_color_selection()
     register_setattr()
     register_setorigin()
 
     # Sculpting Operators
-    bpy.utils.register_class(SCULPT_OT_Weights2FaceSets)
-    bpy.utils.register_class(SCULPT_OT_selected_vert_mask_tool)
-    bpy.utils.register_class(SCULPT_OT_FaceSetToVertGroups)
+    register_weights_to_face_sets()
+    register_sculpt_mask_selected_verts()
+    register_face_set_to_vert_groups()
 
 
     # Outliner Menus
@@ -147,55 +135,54 @@ def register():
     kmi = km.keymap_items.new("wm.call_menu", type="X", value="PRESS", ctrl=True, shift=True)
     kmi.properties.name = "VIEW3D_MT_MirrorDelete"
 
-    kmi = km.keymap_items.new("wm.call_menu", type="C", value="PRESS", ctrl=True, shift=True)
-    kmi.properties.name = "VIEW3D_MT_CycleItemsPanel"
+    # Only register CycleItemsPanel keymap if enabled in preferences
+    addon_prefs = bpy.context.preferences.addons[__name__].preferences
+    if getattr(addon_prefs, "enable_cycle_items_panel", True):
+        cycle_items_kmi = km.keymap_items.new("wm.call_menu", type="C", value="PRESS", ctrl=True, shift=True)
+        cycle_items_kmi.properties.name = "VIEW3D_MT_CycleItemsPanel"
+    else:
+        cycle_items_kmi = None
 
-    flops_menus_register()  # <-- Add this at the end of register()
+    flops_menus_register()
 
 
 def unregister():
+    global cycle_items_kmi
     unregister = bpy.utils.unregister_class
+    
+    # Preferences
+    prefs_unregister()
 
     # Menus
     unregister_ui()
-    
-    # Properties
-    unregister(MirrorAxisProperty)
-    del bpy.types.Scene.mirror_axis
 
     # General Operators
-    unregister(OBJECT_OT_MirrorOperator)
-    unregister(OBJECT_OT_mirror_merge)
-    unregister(OBJECT_OT_mirror_DissolveLimited)
-    unregister(OBJECT_OT_mirror_DissolveEdges)
-    unregister(OBJECT_OT_mirror_DissolveVerts)
-    unregister(OBJECT_OT_mirror_DeleteVerts)
-    unregister(OBJECT_OT_mirror_DeleteFaces)
+    unregister_mirroroperator()
+    unregister_disolve_ops()
+    unregister_delete_ops()
     unregister_temp_layout()
-    unregister(OBJECT_OT_mirror_MergeByCenter)
+    unregister_mirror_merge()
     unregister_blend_normals()
 
     # Utility Operators
-    unregister(OBJECT_OT_SanitizeName)
-    unregister(OBJECT_OT_RemoveAllMaterials)
-    unregister(OBJECT_OT_vertex_snap)
-    unregister(OBJECT_OT_SanitizeAllNames)
+    unregister_sanitize_names()
+    unregister_vertex_snap()
+    
 
     # Weight Painting Operators
-    unregister(OBJECT_OT_DeleteVertexGroupWeights)
-    unregister(OBJECT_OT_CopyVertexWeights)
+    
     unregister_transfer_mode_wp()
 
     # Experimental Operators
-    unregister(OBJECT_OT_VertexColorSelection)
+    unregister_vertex_color_selection()
     unregister_setattr()
     unregister_setorigin()
 
 
     # Sculpting Operators
-    bpy.utils.unregister_class(SCULPT_OT_Weights2FaceSets)
-    bpy.utils.unregister_class(SCULPT_OT_selected_vert_mask_tool)
-    bpy.utils.unregister_class(SCULPT_OT_FaceSetToVertGroups)
+    unregister_weights_to_face_sets()
+    unregister_sculpt_mask_selected_verts()
+    unregister_face_set_to_vert_groups()
 
 
     # Outliner Menus
@@ -205,16 +192,13 @@ def unregister():
     wm = bpy.context.window_manager
     km = wm.keyconfigs.addon.keymaps.get("3D View")
     if km:
-        to_remove = []
-        for kmi in km.keymap_items:
+        for kmi in list(km.keymap_items):
             if kmi.idname == "wm.call_menu" and getattr(kmi.properties, "name", "") in {
                 "VIEW3D_MT_MirrorDelete", "VIEW3D_MT_CycleItemsPanel"
             }:
-                to_remove.append(kmi)
-        for kmi in to_remove:
-            km.keymap_items.remove(kmi)
-
-    flops_menus_unregister()  # <-- Add this at the end of unregister()
+                km.keymap_items.remove(kmi)
+    cycle_items_kmi = None
+    flops_menus_unregister()
 
 
 if __name__ == "__main__":

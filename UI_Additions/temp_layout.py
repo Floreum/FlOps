@@ -229,6 +229,7 @@ class OBJECT_OT_mirror_Extract(Operator):
         
         return {'FINISHED'}
     
+
 def register():
     bpy.utils.register_class(MESH_OT_cycle_items)
     bpy.utils.register_class(OBJECT_OT_mirror_UVSeams)

@@ -128,5 +128,11 @@ class OBJECT_OT_CopyVertexWeights(bpy.types.Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 
-
+def register():
+    bpy.utils.register_class(OBJECT_OT_DeleteVertexGroupWeights)
+    bpy.utils.register_class(OBJECT_OT_CopyVertexWeights)
+    
+def unregister():
+    bpy.utils.unregister_class(OBJECT_OT_DeleteVertexGroupWeights)
+    bpy.utils.unregister_class(OBJECT_OT_CopyVertexWeights)
 

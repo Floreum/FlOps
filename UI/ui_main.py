@@ -15,7 +15,6 @@ from ..UI_Additions.temp_layout import MESH_OT_cycle_items, OBJECT_OT_mirror_Cre
 from ..VertexGroups.vertex_snap import OBJECT_OT_vertex_snap
 from ..VertexGroups.VertexColSelection import OBJECT_OT_VertexColorSelection
 
-# from .FaceSetFromVertGroups import OBJECT_OT_FaceSetFromVertGroups 
 
 
 # Draw the Delete UI
@@ -68,18 +67,19 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
     bl_idname = "VIEW3D_MT_CycleItemsPanel"
     bl_label = "Alt Ops"
 
+
     def draw(self, context):
         layout = self.layout
         separator = self.layout.separator
         row = layout.row()
         column = layout.column()
         operator = self.layout.operator
-        
+
         layout.label(text="Alt Ops Menu")
         separator()
         operator(OBJECT_OT_mirror_UVSeams.bl_idname)
         operator(OBJECT_OT_mirror_Crease.bl_idname)
-        
+
         column.label(text="Test")
         separator()
         operator(OBJECT_OT_mirror_Extract.bl_idname)
@@ -92,18 +92,20 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         layout.operator_context = 'INVOKE_DEFAULT'
         layout.operator("object.delete_vertex_group_weights", text="Delete Selected Vertex Weights")
         layout.operator("object.copy_vertex_weights", text="Copy Active to Selected Vertex Weights")
-        
+
         layout.separator()
         operator("object.vertex_color_selection")
 
 
 def register():
     bpy.utils.register_class(VIEW3D_MT_MirrorDelete)
-    bpy.utils.register_class(VIEW3D_MT_CycleItemsPanel)
-    
+
 def unregister():
+    try:
+        bpy.utils.unregister_class(VIEW3D_MT_CycleItemsPanel)
+    except Exception:
+        pass
     bpy.utils.unregister_class(VIEW3D_MT_MirrorDelete)
-    bpy.utils.unregister_class(VIEW3D_MT_CycleItemsPanel)
 
 if __name__ == "__main__":
     register()

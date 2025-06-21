@@ -108,3 +108,15 @@ class OBJECT_OT_RemoveAllMaterials(Operator):
         return {'FINISHED'}
 
 
+def register():
+    bpy.utils.register_class(OBJECT_OT_SanitizeName)
+    bpy.utils.register_class(OBJECT_OT_SanitizeAllNames)
+    bpy.utils.register_class(OBJECT_OT_RemoveAllMaterials)
+
+def unregister():
+    bpy.utils.unregister_class(OBJECT_OT_SanitizeName)
+    bpy.utils.unregister_class(OBJECT_OT_SanitizeAllNames)
+    bpy.utils.unregister_class(OBJECT_OT_RemoveAllMaterials)
+
+if __name__ == "__main__":
+    register()

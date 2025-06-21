@@ -56,3 +56,11 @@ class OBJECT_OT_VertexColorSelection(bpy.types.Operator):
         # Update mesh
         mesh.update()
 
+def register():
+    bpy.utils.register_class(OBJECT_OT_VertexColorSelection)
+
+def unregister():
+    bpy.utils.unregister_class(OBJECT_OT_VertexColorSelection)
+
+if __name__ == "__main__":
+    register()

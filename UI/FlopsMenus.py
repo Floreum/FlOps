@@ -14,7 +14,7 @@ def flops_mask_menu(self, context):
 
 class MESH_FLOPS_vertex_groups(bpy.types.Menu):
     bl_label = "FlOps Vertex Groups"
-    bl_idname = "MESH_FLOPS_vertex_groups"
+    bl_idname = "MESH_MT_FLOPS_vertex_groups"
 
     def draw(self, context):
         layout = self.layout
@@ -39,10 +39,6 @@ _is_registered = False
 
 def register():
     global _is_registered
-    if _is_registered:
-        print("FlopsMenus: already registered, skipping duplicate append.")
-        return
-    print("FlopsMenus: register called")
     bpy.types.VIEW3D_MT_mask.append(flops_mask_menu)
     bpy.types.MESH_MT_vertex_group_context_menu.append(flops_vertex_groups_menu)
     bpy.types.VIEW3D_MT_make_single_user.append(flops_make_single_user_menu)
@@ -52,16 +48,9 @@ def register():
 
 def unregister():
     global _is_registered
-    print("FlopsMenus: unregister called")
-    try:
-        bpy.types.VIEW3D_MT_mask.remove(flops_mask_menu)
-        bpy.types.MESH_MT_vertex_group_context_menu.remove(flops_vertex_groups_menu)
-        bpy.types.VIEW3D_MT_make_single_user.remove(flops_make_single_user_menu)
-        bpy.types.VIEW3D_MT_make_links.remove(flops_make_links_menu)
-    except Exception as e:
-        print(f"FlopsMenus: error during menu removal: {e}")
-    try:
-        bpy.utils.unregister_class(MESH_FLOPS_vertex_groups)
-    except Exception as e:
-        print(f"FlopsMenus: error during class unregistration: {e}")
+    bpy.types.VIEW3D_MT_mask.remove(flops_mask_menu)
+    bpy.types.MESH_MT_vertex_group_context_menu.remove(flops_vertex_groups_menu)
+    bpy.types.VIEW3D_MT_make_single_user.remove(flops_make_single_user_menu)
+    bpy.types.VIEW3D_MT_make_links.remove(flops_make_links_menu)
+    bpy.utils.unregister_class(MESH_FLOPS_vertex_groups)
     _is_registered = False
