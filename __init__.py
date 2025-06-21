@@ -17,7 +17,10 @@ import blf
 
 # Organized list of imports
 from .prefs import register as prefs_register, unregister as prefs_unregister
-from .prefs import FlOpsPreferences
+
+# Menus
+from .UI.ui_main import register as register_ui, unregister as unregister_ui
+from .UI.FlopsMenus import register as flops_menus_register, unregister as flops_menus_unregister
 
 
 # General Operators
@@ -47,16 +50,13 @@ from .VertexGroups.VertGroupsFromFaceSets import register as register_face_set_t
 from .Sculpting.MaskSelectedVerts import register as register_sculpt_mask_selected_verts, unregister as unregister_sculpt_mask_selected_verts
 from .VertexGroups.Weights2FaceSets import register as register_weights_to_face_sets, unregister as unregister_weights_to_face_sets
 
-# Menus
-from .UI.ui_main import register as register_ui, unregister as unregister_ui
-from .UI.FlopsMenus import register as flops_menus_register, unregister as flops_menus_unregister
 
 # Properties
-bpy.types.Scene.mirrorOP = bpy.props.BoolProperty(
-    name="Enable Mirror",
-    description="Turns on mirroring for every operation",
-    default=True,
-)
+# bpy.types.Scene.mirrorOP = bpy.props.BoolProperty(
+#     name="Enable Mirror",
+#     description="Turns on mirroring for every operation",
+#     default=True,
+# )
 
 bpy.types.Scene.enableUV = bpy.props.BoolProperty(
     name="Preserve UVs",
@@ -86,8 +86,36 @@ bpy.types.Scene.run_check = bpy.props.BoolProperty(
 def draw_func(self, context):
     self.layout.menu("VIEW3D_MT_MirrorDelete")  # Need to move this
 
+keymaps = []
 
 cycle_items_kmi = None
+
+
+def setup_keymaps():
+    wm = bpy.context.window_manager
+    kc = wm.keyconfigs.addon
+    if not kc:
+        return
+
+    km = kc.keymaps.new(name="3D View", space_type="VIEW_3D")
+
+    # Always add the Mirror Delete menu keymap
+    kmi = km.keymap_items.new("wm.call_menu", type="X", value="PRESS", ctrl=True, shift=True)
+    kmi.properties.name = "VIEW3D_MT_MirrorDelete"
+    keymaps.append((km, kmi))
+
+    # Add CycleItemsPanel keymap if preference enabled
+    addon_prefs = bpy.context.preferences.addons[__name__].preferences
+    if addon_prefs.enable_cycle_items_panel:
+        kmi = km.keymap_items.new("wm.call_menu", type="C", value="PRESS", ctrl=True, shift=True)
+        kmi.properties.name = "VIEW3D_MT_CycleItemsPanel"
+        keymaps.append((km, kmi))
+
+def remove_keymaps():
+    for km, kmi in keymaps:
+        km.keymap_items.remove(kmi)
+    keymaps.clear()
+
 
 def register():
     global cycle_items_kmi
@@ -98,6 +126,7 @@ def register():
 
     # Menus
     register_ui()
+    flops_menus_register()
 
     # General Operators
     register_mirroroperator()
@@ -114,6 +143,7 @@ def register():
 
     # Weight Painting Operators
     register_transfer_mode_wp()
+    register_delete_vertex_weights()
 
     # Experimental Operators
     register_vertex_color_selection()
@@ -128,22 +158,10 @@ def register():
 
     # Outliner Menus
     register_sync_visibility()
+    
+    setup_keymaps()
 
-    # Keymaps
-    wm = bpy.context.window_manager
-    km = wm.keyconfigs.addon.keymaps.new(name="3D View", space_type="VIEW_3D")
-    kmi = km.keymap_items.new("wm.call_menu", type="X", value="PRESS", ctrl=True, shift=True)
-    kmi.properties.name = "VIEW3D_MT_MirrorDelete"
-
-    # Only register CycleItemsPanel keymap if enabled in preferences
-    addon_prefs = bpy.context.preferences.addons[__name__].preferences
-    if getattr(addon_prefs, "enable_cycle_items_panel", True):
-        cycle_items_kmi = km.keymap_items.new("wm.call_menu", type="C", value="PRESS", ctrl=True, shift=True)
-        cycle_items_kmi.properties.name = "VIEW3D_MT_CycleItemsPanel"
-    else:
-        cycle_items_kmi = None
-
-    flops_menus_register()
+    
 
 
 def unregister():
@@ -155,6 +173,7 @@ def unregister():
 
     # Menus
     unregister_ui()
+    flops_menus_unregister()
 
     # General Operators
     unregister_mirroroperator()
@@ -170,8 +189,8 @@ def unregister():
     
 
     # Weight Painting Operators
-    
     unregister_transfer_mode_wp()
+    unregister_delete_vertex_weights()
 
     # Experimental Operators
     unregister_vertex_color_selection()
@@ -187,18 +206,10 @@ def unregister():
 
     # Outliner Menus
     unregister_sync_visibility()
-
-    # Keymaps
-    wm = bpy.context.window_manager
-    km = wm.keyconfigs.addon.keymaps.get("3D View")
-    if km:
-        for kmi in list(km.keymap_items):
-            if kmi.idname == "wm.call_menu" and getattr(kmi.properties, "name", "") in {
-                "VIEW3D_MT_MirrorDelete", "VIEW3D_MT_CycleItemsPanel"
-            }:
-                km.keymap_items.remove(kmi)
-    cycle_items_kmi = None
-    flops_menus_unregister()
+    
+    remove_keymaps()
+    
+    
 
 
 if __name__ == "__main__":

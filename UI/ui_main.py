@@ -98,13 +98,13 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
 
 
 def register():
+    bpy.utils.register_class(VIEW3D_MT_CycleItemsPanel)
     bpy.utils.register_class(VIEW3D_MT_MirrorDelete)
+    
 
 def unregister():
-    try:
-        bpy.utils.unregister_class(VIEW3D_MT_CycleItemsPanel)
-    except Exception:
-        pass
+
+    bpy.utils.unregister_class(VIEW3D_MT_CycleItemsPanel)
     bpy.utils.unregister_class(VIEW3D_MT_MirrorDelete)
 
 if __name__ == "__main__":
