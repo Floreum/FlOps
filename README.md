@@ -40,7 +40,7 @@ That's where Sync Visibility comes in handy, just navigate over to your Outliner
 
 https://github.com/user-attachments/assets/3dca12f3-3782-4d04-aacf-b599589fe563
 
-
+...
 
 [Todo list](Todo.md)!
 ...
