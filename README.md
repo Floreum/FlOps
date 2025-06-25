@@ -1,5 +1,7 @@
 # FlorOps
-A collection of operators that I wanted to make to speed up my workflow
+A collection of operators that I wanted to make to speed up my workflow.
+
+You can download the addon [here.](https://github.com/Floreum/FlOps/releases)
 
 ## Cycle Items
 A better version of Select Next/Previous, instead of using numpad +/- to grow/shrink your selection you can use your mouse wheel.
@@ -18,7 +20,8 @@ On top of that you also have access to symmetry and selecting an entire edge rin
 ## Blend Normals
 First select the source mesh, and then shift select your target mesh, then you have two locations to choose from, the easiest one you can find it in your hotkey Ctrl+L
 
-![BlendNormals Result](media/images/BlendNormals.gif)
+https://github.com/user-attachments/assets/3e85d934-a658-4032-a350-8e70c8884b0c
+
 
 Alternatively you can also find it under your Properterties tab > Data > Vertex Groups, then click the down arrow and select it in the FlOps menu
 
@@ -35,7 +38,9 @@ If you've ever made edits to a character mesh, sometimes you need a way to easil
 Sometimes you just can't figure out what is appearing in a final render and don't remember what the object is called or where it got burried.
 That's where Sync Visibility comes in handy, just navigate over to your Outliner and press the sync eye icon in the upper right side and click one of two options. You can always undo if you mssed up, but I would recommend you save before you do this.
 
-![Sync Visibility](media/images/Sync_Visibility.gif)
+https://github.com/user-attachments/assets/3dca12f3-3782-4d04-aacf-b599589fe563
+
+...
 
 [Todo list](Todo.md)!
 ...
