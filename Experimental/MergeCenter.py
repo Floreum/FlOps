@@ -2,6 +2,7 @@ import bpy
 
 
 # Pasted from Blender script editor so I need to properly format it to work within the addon
+#test
 
 if bpy.context.object.mode != 'EDIT':
     bpy.ops.object.mode_set(mode='EDIT')
