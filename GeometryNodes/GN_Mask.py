@@ -107,25 +107,45 @@ def gn_mask_node_group():
     group_input_002.outputs[2].hide = True
     group_input_002.outputs[4].hide = True
 
+    #node Set Mesh Normal.001
+    set_mesh_normal_001 = gn_mask.nodes.new("GeometryNodeSetMeshNormal")
+    set_mesh_normal_001.name = "Set Mesh Normal.001"
+    #Remove Custom
+    set_mesh_normal_001.inputs[1].default_value = True
+    #Face Sharpness
+    set_mesh_normal_001.inputs[3].default_value = False
+
+    #node Is Edge Smooth
+    is_edge_smooth = gn_mask.nodes.new("GeometryNodeInputEdgeSmooth")
+    is_edge_smooth.name = "Is Edge Smooth"
+
+    #node Boolean Math
+    boolean_math = gn_mask.nodes.new("FunctionNodeBooleanMath")
+    boolean_math.name = "Boolean Math"
+    boolean_math.operation = 'NOT'
+
 
 
 
 
     #Set locations
     group_input.location = (152.4623260498047, -86.7455062866211)
-    group_output.location = (1721.2177734375, 204.67822265625)
+    group_output.location = (2242.398681640625, 214.08364868164062)
     delete_geometry.location = (844.5514526367188, 72.7951431274414)
     named_attribute.location = (632.3502197265625, -43.68994140625)
     sample_index.location = (630.9369506835938, -178.49488830566406)
     sample_nearest.location = (398.1531677246094, -419.5123291015625)
     normal.location = (398.5230407714844, -326.889404296875)
-    switch.location = (1532.7318115234375, 214.2721710205078)
+    switch.location = (1905.4049072265625, 224.71023559570312)
     set_mesh_normal.location = (1040.7972412109375, -77.05755615234375)
-    group_input_001.location = (1232.7689208984375, 183.95248413085938)
-    switch_001.location = (1345.8580322265625, 66.86405181884766)
+    group_input_001.location = (1605.4420166015625, 194.3905487060547)
+    switch_001.location = (1718.5311279296875, 77.30211639404297)
     reroute.location = (634.3084106445312, 15.936161994934082)
     reroute_001.location = (789.5669555664062, 106.52722930908203)
     group_input_002.location = (1037.34521484375, 61.32982635498047)
+    set_mesh_normal_001.location = (1322.2567138671875, -84.88610076904297)
+    is_edge_smooth.location = (935.615478515625, -285.7739562988281)
+    boolean_math.location = (1123.0496826171875, -237.1604766845703)
 
     #Set dimensions
     group_input.width, group_input.height = 140.0, 100.0
@@ -142,6 +162,9 @@ def gn_mask_node_group():
     reroute.width, reroute.height = 11.5, 100.0
     reroute_001.width, reroute_001.height = 11.5, 100.0
     group_input_002.width, group_input_002.height = 140.0, 100.0
+    set_mesh_normal_001.width, set_mesh_normal_001.height = 140.0, 100.0
+    is_edge_smooth.width, is_edge_smooth.height = 140.0, 100.0
+    boolean_math.width, boolean_math.height = 140.0, 100.0
 
     #initialize gn_mask links
     #switch.Output -> group_output.Geometry
@@ -166,8 +189,8 @@ def gn_mask_node_group():
     gn_mask.links.new(group_input_001.outputs[2], switch.inputs[0])
     #delete_geometry.Geometry -> switch_001.False
     gn_mask.links.new(delete_geometry.outputs[0], switch_001.inputs[1])
-    #set_mesh_normal.Mesh -> switch_001.True
-    gn_mask.links.new(set_mesh_normal.outputs[0], switch_001.inputs[2])
+    #set_mesh_normal_001.Mesh -> switch_001.True
+    gn_mask.links.new(set_mesh_normal_001.outputs[0], switch_001.inputs[2])
     #reroute.Output -> reroute_001.Input
     gn_mask.links.new(reroute.outputs[0], reroute_001.inputs[0])
     #group_input_002.Retain Normals -> switch_001.Switch
@@ -180,6 +203,12 @@ def gn_mask_node_group():
     gn_mask.links.new(sample_index.outputs[0], set_mesh_normal.inputs[1])
     #group_input.Geometry -> reroute.Input
     gn_mask.links.new(group_input.outputs[0], reroute.inputs[0])
+    #set_mesh_normal.Mesh -> set_mesh_normal_001.Mesh
+    gn_mask.links.new(set_mesh_normal.outputs[0], set_mesh_normal_001.inputs[0])
+    #is_edge_smooth.Smooth -> boolean_math.Boolean
+    gn_mask.links.new(is_edge_smooth.outputs[0], boolean_math.inputs[0])
+    #boolean_math.Boolean -> set_mesh_normal_001.Edge Sharpness
+    gn_mask.links.new(boolean_math.outputs[0], set_mesh_normal_001.inputs[2])
     return gn_mask
 
 gn_mask = gn_mask_node_group()
