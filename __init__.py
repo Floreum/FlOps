@@ -13,7 +13,7 @@ import bpy
 from bpy.types import Operator, Panel, Menu
 import blf
 
-# this whole registering system is a mess, but it works for now
+# this whole registering system is a mess, but it works for now...
 
 # Organized list of imports
 from .prefs import register as prefs_register, unregister as prefs_unregister
