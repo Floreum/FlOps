@@ -17,7 +17,7 @@ from ..VertexGroups.VertexColSelection import OBJECT_OT_VertexColorSelection
 
 
 
-# Draw the Delete UI
+# Draw the Delete UI.
 class VIEW3D_MT_MirrorDelete(Menu):
     bl_idname = "VIEW3D_MT_MirrorDelete"
     bl_label = "Mirror Delete"
@@ -31,7 +31,7 @@ class VIEW3D_MT_MirrorDelete(Menu):
         operator = self.layout.operator
         
         
-        # come back to this)
+        # Come back to this
         if context.scene.mirrorOP == False:
             column.label(text="Mirror Disabled")
         if context.scene.mirrorOP == True:
@@ -87,7 +87,8 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         layout.separator()
         operator(OBJECT_OT_SanitizeName.bl_idname)
         operator(OBJECT_OT_RemoveAllMaterials.bl_idname)
-        # Additional UI elements related to the operator can be added here
+        
+        # Additional UI elements
         layout.separator()
         layout.operator_context = 'INVOKE_DEFAULT'
         layout.operator("object.delete_vertex_group_weights", text="Delete Selected Vertex Weights")
