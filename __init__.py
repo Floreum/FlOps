@@ -3,7 +3,7 @@ bl_info = {
     "author": "Floreum",
     "description": "Floreum's operators that I use frequently to speed up my personal workflow and address some of the shortcomings of Blenders symmetry.",
     "blender": (4, 4, 0),
-    "version": (0, 2, 0),
+    "version": (0, 3, 0),
     "location": "",
     "warning": "",
     "category": "Generic"
