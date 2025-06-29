@@ -24,6 +24,8 @@ https://github.com/user-attachments/assets/e4eadd40-430c-4c2e-a6c2-8c44b3b000c6
 
 Alternatively you can also find it under your Properterties tab > Data > Vertex Groups, then click the down arrow and select it in the FlOps menu
 
+As of Blender 4.5 this will now use a Geometry Node version
+
 ![BlendNormals Vertex Groups](media/images/BlendNormals_VG.png)
 
 ## Shrinkwrap to Selected
