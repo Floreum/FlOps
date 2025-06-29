@@ -37,6 +37,7 @@ from .UI_Additions.sync_visibility import register as register_sync_visibility, 
 from .UI_Additions.temp_layout import register as register_temp_layout, unregister as unregister_temp_layout
 from .VertexGroups.vertex_snap import register as register_vertex_snap, unregister as unregister_vertex_snap
 from .VertexGroups.BlendNormalsBoundaries import register as register_blend_normals, unregister as unregister_blend_normals
+from .GeometryNodes.GN_BlendNormals import register as register_gn_blend_normals, unregister as unregister_gn_blend_normals
 
 # Weight Painting Operators
 from .VertexGroups.DeleteVertWeight import register as register_delete_vertex_weights, unregister as unregister_delete_vertex_weights
@@ -113,6 +114,7 @@ def register():
     register_temp_layout()
     register_mirror_merge()
     register_blend_normals()
+    register_gn_blend_normals()
 
     # Utility Operators
     register_sanitize_names()
@@ -160,6 +162,7 @@ def unregister():
     unregister_temp_layout()
     unregister_mirror_merge()
     unregister_blend_normals()
+    unregister_gn_blend_normals()
 
     # Utility Operators
     unregister_sanitize_names()

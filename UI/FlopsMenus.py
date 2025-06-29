@@ -1,5 +1,6 @@
 import bpy
 
+
 # Handles All menu additions for the addon
 
 # Adds a separator to the Mask menu
@@ -8,7 +9,7 @@ def flops_mask_menu(self, context):
     self.layout.label(text="FlOps")
     
     self.layout.operator("sculpt.selected_vert_mask_tool", text="Mask From Edit Mode Selection")
-    self.layout.operator("sculpt.face_set_from_vert_groups", text="Vertex Groups from Face Sets")
+    self.layout.operator("sculpt.face_set_from_vert_groups", text="Vertex Groups to Face Sets")
     self.layout.operator("sculpt.weights_to_face_sets", text="Weights to Face Sets")
 
 
@@ -18,9 +19,15 @@ class MESH_FLOPS_vertex_groups(bpy.types.Menu):
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("sculpt.face_set_from_vert_groups", text="Vertex Groups from Face Sets")
+        layout.operator("sculpt.face_set_from_vert_groups", text="Vertex Groups to Face Sets")
         layout.operator("sculpt.weights_to_face_sets", text="Weights to Face Sets")
-        layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
+        
+        # Check Blender version to run different Blend Boundary Normals operator
+        if bpy.app.version >= (4, 5, 0):
+            layout.operator("object.normal_blend", text="Blend Boundary Normals")
+            
+        else:
+            layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
     
 def flops_vertex_groups_menu(self, context):
     self.layout.menu(MESH_FLOPS_vertex_groups.bl_idname)
@@ -28,12 +35,20 @@ def flops_vertex_groups_menu(self, context):
 def flops_make_links_menu(self, context):
     self.layout.separator()
     self.layout.label(text="FlOps")
-    self.layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
+    if bpy.app.version >= (4, 5, 0):
+        self.layout.operator("object.normal_blend", text="Blend Boundary Normals ")
+    else:
+        self.layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
 
 def flops_make_single_user_menu(self, context):
     self.layout.separator()
     self.layout.label(text="FlOps")
-    self.layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
+    if bpy.app.version >= (4, 5, 0):
+        self.layout.operator("object.normal_blend", text="Blend Boundary Normals")
+    else: 
+        self.layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
+
+    
 
 _is_registered = False
 

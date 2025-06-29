@@ -4,7 +4,7 @@ import mathutils
 from mathutils import kdtree
 
 
-class OBJECT_FLOPS_normal_blend(Operator):
+class OBJECT_FLOPS_normal_blend_LEGACY(Operator):
     """Select Boundary Blend Normal"""
     bl_idname = "mesh.select_boundary_blend"
     bl_label = "Blend normals"
@@ -135,13 +135,13 @@ class OBJECT_FLOPS_normal_blend(Operator):
         row = layout.row()
         row.enabled = not self.apply_modifier
         row.prop(self, "loop_mapping")
-        layout.prop(self, "auto_disable_outline")  # <-- Add this line
+        layout.prop(self, "auto_disable_outline")
 
 def register():
-    bpy.utils.register_class(OBJECT_FLOPS_normal_blend)
+    bpy.utils.register_class(OBJECT_FLOPS_normal_blend_LEGACY)
     
 def unregister():
-    bpy.utils.unregister_class(OBJECT_FLOPS_normal_blend)
+    bpy.utils.unregister_class(OBJECT_FLOPS_normal_blend_LEGACY)
 
 
 
