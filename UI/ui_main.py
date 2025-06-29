@@ -49,9 +49,9 @@ class VIEW3D_MT_MirrorDelete(Menu):
         operator(OBJECT_OT_mirror_DissolveVerts.bl_idname)
         
         separator()
-        layout.operator_context = 'INVOKE_DEFAULT'  # <-- Add this line before your modal operator
+        layout.operator_context = 'INVOKE_DEFAULT'
         operator(MESH_OT_cycle_items.bl_idname)
-        layout.operator_context = 'EXEC_DEFAULT'    # <-- Optional: reset to default if needed
+        layout.operator_context = 'EXEC_DEFAULT'
         operator(OBJECT_OT_mirror_merge.bl_idname)
         operator(OBJECT_OT_vertex_snap.bl_idname)
         
