@@ -32,7 +32,7 @@ class OBJECT_FLOPS_normal_blend(Operator):
         geometry_socket_1.attribute_domain = 'POINT'
 
         #Socket Object
-        object_socket = normal_blend.interface.new_socket(name = "Object", in_out='INPUT', socket_type = 'NodeSocketObject')
+        object_socket = normal_blend.interface.new_socket(name = "Source", in_out='INPUT', socket_type = 'NodeSocketObject')
         object_socket.attribute_domain = 'POINT'
 
         #Socket Vertex Group
