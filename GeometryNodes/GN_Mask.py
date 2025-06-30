@@ -2,17 +2,10 @@ import bpy, mathutils
 from bpy.types import Context, Event, Operator
 from bpy.props import EnumProperty
 
-
-
-
-
 #initialize gn_mask node group
 def gn_mask_node_group(vertex_group_name = "__Mask"):
     
     # -- Create the node group for the mask modifier --
-    
-    
-    
     gn_mask = bpy.data.node_groups.new(type = 'GeometryNodeTree', name = "GN Mask")
 
     gn_mask.color_tag = 'NONE'
@@ -333,8 +326,6 @@ class OBJECT_FLOPS_GN_MASK(Operator):
         self.report({'INFO'}, f"Geometry Nodes Mask Modifier created using '{self.vertex_groups}' vertex group")
         return {'FINISHED'}
 
-
-        
         
 def register():
     bpy.utils.register_class(OBJECT_FLOPS_GN_MASK)
@@ -344,8 +335,3 @@ def unregister():
     
 if __name__ == "__main__":
     register()
-    # bpy.ops.object.flops_gn_mask()
-    
-
-# gn_mask = gn_mask_node_group()
-
