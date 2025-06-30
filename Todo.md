@@ -12,3 +12,5 @@
 - View3D_LatticeMirrorOperator doesn't have any UI element to activate it
 - MergeLast doesn't have any classes to activate it via UI
 - Need to add a 'Keep Boundary' option for Blend Normal
+- Need to add an option to use the legacy normal in 4.5+ (preferences?)
+- Need to add an option to use the legacy mask in 4.5+ (preferences?)
