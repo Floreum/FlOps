@@ -97,7 +97,8 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
 
         layout.separator()
         operator("object.vertex_color_selection")
-        operator("object.flops_gn_mask")
+        if bpy.app.version >= (4, 5, 0):
+            operator("object.flops_gn_mask")
 
 
 def register():
