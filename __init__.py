@@ -3,7 +3,7 @@ bl_info = {
     "author": "Floreum",
     "description": "Floreum's operators that I use frequently to speed up my personal workflow and address some of the shortcomings of Blenders symmetry.",
     "blender": (4, 4, 0),
-    "version": (0, 3, 0),
+    "version": (0, 4, 0),
     "location": "",
     "warning": "",
     "category": "Generic"
@@ -47,6 +47,7 @@ from .VertexGroups.transfer_mode_weightpaint import register as register_transfe
 from .VertexGroups.VertexColSelection import register as register_vertex_color_selection, unregister as unregister_vertex_color_selection
 from .UI_Additions.SetAttributes import register as register_setattr, unregister as unregister_setattr
 from .Misc.SetOrigin import register as register_setorigin, unregister as unregister_setorigin
+from .GeometryNodes.GN_Mask import register as register_gn_mask, unregister as unregister_gn_mask
 
 # Sculpting Operators
 from .VertexGroups.VertGroupsFromFaceSets import register as register_face_set_to_vert_groups, unregister as unregister_face_set_to_vert_groups
@@ -129,6 +130,7 @@ def register():
     register_vertex_color_selection()
     register_setattr()
     register_setorigin()
+    register_gn_mask()
 
     # Sculpting Operators
     register_weights_to_face_sets()
@@ -177,6 +179,7 @@ def unregister():
     unregister_vertex_color_selection()
     unregister_setattr()
     unregister_setorigin()
+    unregister_gn_mask()
 
 
     # Sculpting Operators

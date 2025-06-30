@@ -14,6 +14,7 @@ from ..UI_Additions.temp_layout import MESH_OT_cycle_items, OBJECT_OT_mirror_Cre
 
 from ..VertexGroups.vertex_snap import OBJECT_OT_vertex_snap
 from ..VertexGroups.VertexColSelection import OBJECT_OT_VertexColorSelection
+from ..GeometryNodes.GN_Mask import OBJECT_FLOPS_GN_MASK
 
 
 
@@ -58,6 +59,8 @@ class VIEW3D_MT_MirrorDelete(Menu):
         separator()
         layout.label(text="Merge by")
         operator(OBJECT_OT_mirror_MergeByCenter.bl_idname)
+        
+        
 
         
         
@@ -75,12 +78,10 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         column = layout.column()
         operator = self.layout.operator
 
-        layout.label(text="Alt Ops Menu")
         separator()
         operator(OBJECT_OT_mirror_UVSeams.bl_idname)
         operator(OBJECT_OT_mirror_Crease.bl_idname)
 
-        column.label(text="Test")
         separator()
         operator(OBJECT_OT_mirror_Extract.bl_idname)
         operator(OBJECT_OT_ripedgemove.bl_idname)
@@ -96,6 +97,7 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
 
         layout.separator()
         operator("object.vertex_color_selection")
+        operator("object.flops_gn_mask")
 
 
 def register():
