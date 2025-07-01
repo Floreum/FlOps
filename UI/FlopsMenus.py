@@ -1,5 +1,9 @@
 import bpy
 
+from .. import version_check
+
+legacy_normals = version_check.legacy_normals
+
 
 # Handles All menu additions for the addon
 
@@ -24,10 +28,10 @@ class MESH_FLOPS_vertex_groups(bpy.types.Menu):
         
         # Check Blender version to run different Blend Boundary Normals operator
         if bpy.app.version >= (4, 5, 0):
-            layout.operator("object.normal_blend", text="Blend Boundary Normals")
+            layout.operator("object.flops_gn_normal_blend", text="Blend Boundary Normals")
             
         else:
-            layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
+            layout.operator("object.flops_normal_blend_legacy", text="Blend Boundary Normals")
     
 def flops_vertex_groups_menu(self, context):
     self.layout.menu(MESH_FLOPS_vertex_groups.bl_idname)
@@ -36,17 +40,19 @@ def flops_make_links_menu(self, context):
     self.layout.separator()
     self.layout.label(text="FlOps")
     if bpy.app.version >= (4, 5, 0):
-        self.layout.operator("object.normal_blend", text="Blend Boundary Normals ")
-    else:
-        self.layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
+        self.layout.operator("object.flops_gn_normal_blend", text="Blend Boundary Normals ")
+    elif bpy.app.version < (4, 5, 0):
+        self.layout.operator("object.flops_normal_blend_legacy", text="Blend Boundary Normals")
 
 def flops_make_single_user_menu(self, context):
     self.layout.separator()
     self.layout.label(text="FlOps")
     if bpy.app.version >= (4, 5, 0):
-        self.layout.operator("object.normal_blend", text="Blend Boundary Normals")
+        self.layout.operator("object.flops_gn_normal_blend", text="Blend Boundary Normals")
+        if legacy_normals():
+            self.layout.operator("object.flops_normal_blend_legacy", text="Blend Boundary Normals (Legacy)")
     else: 
-        self.layout.operator("mesh.select_boundary_blend", text="Blend Boundary Normals")
+        self.layout.operator("object.flops_normal_blend_legacy", text="Blend Boundary Normals")
 
     
 

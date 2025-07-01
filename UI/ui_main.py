@@ -1,6 +1,8 @@
 import bpy
 import bmesh
 from bpy.types import Menu
+from .. import ADDON_NAME
+from .. import version_check
 
 from ..MirrorOps.delete_ops import OBJECT_OT_mirror_DeleteFaces, OBJECT_OT_mirror_DeleteVerts
 from ..VertexGroups.DeleteVertWeight import OBJECT_OT_DeleteVertexGroupWeights, OBJECT_OT_CopyVertexWeights
@@ -15,6 +17,10 @@ from ..UI_Additions.temp_layout import MESH_OT_cycle_items, OBJECT_OT_mirror_Cre
 from ..VertexGroups.vertex_snap import OBJECT_OT_vertex_snap
 from ..VertexGroups.VertexColSelection import OBJECT_OT_VertexColorSelection
 from ..GeometryNodes.GN_Mask import OBJECT_FLOPS_GN_MASK
+
+# versions
+legacy_normals = version_check.legacy_normals
+
 
 
 
@@ -77,6 +83,11 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         row = layout.row()
         column = layout.column()
         operator = self.layout.operator
+        
+        
+
+        
+        
 
         separator()
         operator(OBJECT_OT_mirror_UVSeams.bl_idname)
@@ -97,8 +108,15 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
 
         layout.separator()
         operator("object.vertex_color_selection")
+        
         if bpy.app.version >= (4, 5, 0):
             operator("object.flops_gn_mask")
+            operator("object.flops_gn_normal_blend", text="Blend Boundary Normals")
+        
+        if legacy_normals():
+            operator("object.flops_normal_blend_legacy", text="Blend Boundary Normals (Legacy)")
+        else:
+            operator("object.flops_normal_blend_legacy", text="Blend Boundary Normals")
 
 
 def register():

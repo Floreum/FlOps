@@ -3,7 +3,7 @@ bl_info = {
     "author": "Floreum",
     "description": "Floreum's operators that I use frequently to speed up my personal workflow and address some of the shortcomings of Blenders symmetry.",
     "blender": (4, 4, 0),
-    "version": (0, 4, 0),
+    "version": (0, 4, 1),
     "location": "",
     "warning": "",
     "category": "Generic"
@@ -12,6 +12,8 @@ bl_info = {
 import bpy
 from bpy.types import Operator, Panel, Menu
 import blf
+
+ADDON_NAME = __name__
 
 # this whole registering system is a mess, but it works for now...
 

@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 # Example of manifest file for a Blender extension
 # Change the values according to your extension
 id = "flops"
-version = "0.4.0"
+version = "0.4.1"
 name = "FlOps"
 tagline = "Floreum's operators that I use frequently to speed up my personal workflow and address some of the shortcomings of Blenders symmetry."
 maintainer = "Floreum"

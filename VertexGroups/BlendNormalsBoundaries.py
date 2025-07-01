@@ -2,11 +2,12 @@ import bpy
 from bpy.types import Operator
 import mathutils
 from mathutils import kdtree
+from .. import ADDON_NAME
 
 
 class OBJECT_FLOPS_normal_blend_LEGACY(Operator):
     """Select Boundary Blend Normal"""
-    bl_idname = "mesh.select_boundary_blend"
+    bl_idname = "object.flops_normal_blend_legacy"
     bl_label = "Blend normals"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -51,20 +52,28 @@ class OBJECT_FLOPS_normal_blend_LEGACY(Operator):
         return {'FINISHED'}
 
     def select_boundary_blend(self, context):
+        
+        # Outline preferences check
+        try:
+            addon_prefs = bpy.context.preferences.addons[ADDON_NAME].preferences
+        except (KeyError, AttributeError):
+            addon_prefs = None 
+        
         # Set outline visibility based on user preference
-        for area in context.window.screen.areas:
-            if area.type == 'VIEW_3D':
-                for space in area.spaces:
-                    if space.type == 'VIEW_3D' and hasattr(space.shading, "show_object_outline"):
-                        if self.auto_disable_outline:
-                            if space.shading.show_object_outline:
-                                space.shading.show_object_outline = False
-                                self.report({'WARNING'}, "Object Outline has been automatically disabled for better visualization.")
-                        else:
-                            if not space.shading.show_object_outline:
-                                space.shading.show_object_outline = True
-                                self.report({'INFO'}, "Object Outline has been re-enabled.")
-                break
+        if addon_prefs.disable_outline:
+            for area in context.window.screen.areas:
+                if area.type == 'VIEW_3D':
+                    for space in area.spaces:
+                        if space.type == 'VIEW_3D' and hasattr(space.shading, "show_object_outline"):
+                            if self.auto_disable_outline and addon_prefs.disable_outline:
+                                if space.shading.show_object_outline:
+                                    space.shading.show_object_outline = False
+                                    self.report({'WARNING'}, "Object Outline has been automatically disabled for better visualization.")
+                            else:
+                                if not space.shading.show_object_outline:
+                                    space.shading.show_object_outline = True
+                                    self.report({'INFO'}, "Object Outline has been re-enabled.")
+                    break
 
         obj = bpy.context.object  # Active object (target)
         selected = [o for o in context.selected_objects if o.type == 'MESH']
@@ -142,12 +151,3 @@ def register():
     
 def unregister():
     bpy.utils.unregister_class(OBJECT_FLOPS_normal_blend_LEGACY)
-
-
-
-
-
-
-
-
-

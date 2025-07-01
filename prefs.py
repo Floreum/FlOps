@@ -29,6 +29,21 @@ def update_cycle_items_panel(self, context):
             kmi = km.keymap_items.new("wm.call_menu", type="C", value="PRESS", ctrl=True, shift=True)
             kmi.properties.name = "VIEW3D_MT_CycleItemsPanel"
 
+def update_legacy_normal_blend_modifier(self, context):
+    from .VertexGroups import BlendNormalsBoundaries
+    try:
+        bpy.utils.unregister_class(BlendNormalsBoundaries.OBJECT_FLOPS_normal_blend_LEGACY)
+    except Exception:
+        pass
+    if self.enable_legacy_normal_blend_modifier:
+        try:
+            bpy.utils.register_class(BlendNormalsBoundaries.OBJECT_FLOPS_normal_blend_LEGACY)
+        except Exception:
+            pass
+        
+def update_auto_disable_outline(self, context):
+    pass
+
 class FlOpsPreferences(AddonPreferences):
     bl_idname = __package__
 
@@ -38,6 +53,21 @@ class FlOpsPreferences(AddonPreferences):
         default=True,
         update=update_cycle_items_panel
     )
+    
+    enable_legacy_normal_blend_modifier: BoolProperty(
+        name="Enable Legacy Normal Blend Modifier",
+        description="Add legacy normal blend modifier back to the UI",
+        default=False,
+        update=update_legacy_normal_blend_modifier
+    )
+    
+    disable_outline: BoolProperty(
+        name="Auto Disable Object Outline",
+        description="Change the behavior for automatically disabling the object outline when using the blend normals operator",
+        default=True,
+        update=update_auto_disable_outline
+    )
+
 
     def draw(self, context):
         layout = self.layout
@@ -52,6 +82,9 @@ class FlOpsPreferences(AddonPreferences):
         # Left box
         box_left = col_left.box()
         box_left.prop(self, "enable_cycle_items_panel")
+        if bpy.app.version >= (4, 5, 0):
+            box_left.prop(self, "enable_legacy_normal_blend_modifier")
+        box_left.prop(self, "disable_outline")
 
         # Right box
         box_right = col_right.box()

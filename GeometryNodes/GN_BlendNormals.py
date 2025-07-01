@@ -2,6 +2,7 @@ import bpy
 from bpy.types import Operator
 import mathutils
 from mathutils import kdtree
+from .. import ADDON_NAME
 
 
 def normal_blend_node_group():
@@ -161,13 +162,45 @@ def normal_blend_node_group():
 
 class OBJECT_FLOPS_normal_blend(Operator):
     """Create Normal Blend Geometry Node Modifier and assign vertex group"""
-    bl_idname = "object.normal_blend"
+    bl_idname = "object.flops_gn_normal_blend"
     bl_label = "Normal Blend Setup"
     bl_options = {'REGISTER', 'UNDO'}
+    
+    addon_prefs = bpy.context.preferences.addons[ADDON_NAME].preferences
+    
+    
+    auto_disable_outline: bpy.props.BoolProperty(
+        name="Auto Disable Object Outline",
+        description="Automatically disable object outline for better visualization",
+        default=True
+    )
 
     def execute(self, context):
         obj = context.active_object
         node_group = normal_blend_node_group()
+        
+        
+        try:
+            addon_prefs = bpy.context.preferences.addons[ADDON_NAME].preferences
+        except (KeyError, AttributeError):
+            addon_prefs = None 
+        
+        # Set outline visibility based on user preference
+        if addon_prefs.disable_outline:
+            for area in context.window.screen.areas:
+                if area.type == 'VIEW_3D':
+                    for space in area.spaces:
+                        if space.type == 'VIEW_3D' and hasattr(space.shading, "show_object_outline"):
+                            if self.auto_disable_outline and addon_prefs.disable_outline:
+                                if space.shading.show_object_outline:
+                                    space.shading.show_object_outline = False
+                                    self.report({'WARNING'}, "Object Outline has been automatically disabled for better visualization.")
+                            else:
+                                if not space.shading.show_object_outline:
+                                    space.shading.show_object_outline = True
+                                    self.report({'INFO'}, "Object Outline has been re-enabled.")
+                    break
+        
         
         if not obj or obj.type != 'MESH':
             self.report({'ERROR'}, "Active object must be a mesh")
@@ -239,4 +272,4 @@ def unregister():
 if __name__ == "__main__":
     register()
     # To run: select two meshes, with target active, then:
-    bpy.ops.object.normal_blend()
+    bpy.ops.object.flops_gn_normal_blend()
