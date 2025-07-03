@@ -7,16 +7,18 @@ class OBJECT_OT_SanitizeName(Operator):
     bl_label = "Sanitize Names"
     bl_options = {'REGISTER', 'UNDO'}
     
+    
+    
     @staticmethod
     def sanitize_mesh_name(name):
         # Replace periods with underscores and replaces the Geo suffix
-        name = name.replace(' ', '')
-        return name.replace('.', '_').rstrip("_Geo") + "_Mesh"
+        name = name.replace(' ', '').replace('.', '_').replace(':', '_').replace('-', '_')
+        return name.rstrip("_Geo") + "_Mesh"
     
     @staticmethod
     def sanitize_name(name):
         # Replace periods with underscores
-        return name.replace('.', '_')
+        return name.replace('.', '_').replace(':', '_').replace('-', '_')
 
     @staticmethod
     def rename_mesh_data(objects):
@@ -28,6 +30,8 @@ class OBJECT_OT_SanitizeName(Operator):
         for obj in objects:
             if obj.type == 'MESH':
                 obj.data.name = sanitize_meshname(obj.name)
+                
+                obj.name = sanitize_name(obj.name)
                 
                 if obj.data:
                     obj.data.name = sanitize_meshname(obj.name)
@@ -47,24 +51,24 @@ class OBJECT_OT_SanitizeName(Operator):
                         mat.name = sanitize_name(mat.name)
 
     def execute(self, context):
-        selected_objects = bpy.context.selected_objects
-        
-        # Execute the function to rename mesh data, shape keys, materials
+        selected_objects = context.selected_objects
         if selected_objects:
-            OBJECT_OT_SanitizeName.rename_mesh_data(selected_objects)
+            self.rename_mesh_data(selected_objects)
         else:
-            return self.invoke(context)
-        
+            self.rename_mesh_data(bpy.data.objects)
+        self.report({'INFO'}, "Renaming done.")
         return {'FINISHED'}
-    
+
     def invoke(self, context, event=None):
-        return context.window_manager.invoke_props_dialog(self)
-        #this wont trigger the operator for some reason
+        return context.window_manager.invoke_confirm(self, event)
+
+
         
     
     def draw(self, context):
-        self.layout.label(text="No objects are selected, all objects will be renamed!")
-        self.layout.label(text="Are you sure you want to proceed? ")
+        pass
+
+
 
 class OBJECT_OT_SanitizeAllNames(Operator):
     """Confirmation dialog for renaming all objects in the scene"""
