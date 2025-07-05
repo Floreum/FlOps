@@ -13,8 +13,8 @@ def flops_mask_menu(self, context):
     self.layout.label(text="FlOps")
     
     self.layout.operator("sculpt.selected_vert_mask_tool", text="Mask From Edit Mode Selection")
-    self.layout.operator("sculpt.face_set_from_vert_groups", text="Vertex Groups to Face Sets")
-    self.layout.operator("sculpt.weights_to_face_sets", text="Weights to Face Sets")
+    self.layout.operator("sculpt.face_set_from_vert_groups", text="Face Sets to Vertex Groups")
+    self.layout.operator("sculpt.weights_to_face_sets", text="Vertex Groups to Face Sets")
 
 
 class MESH_FLOPS_vertex_groups(bpy.types.Menu):
@@ -23,8 +23,8 @@ class MESH_FLOPS_vertex_groups(bpy.types.Menu):
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("sculpt.face_set_from_vert_groups", text="Vertex Groups to Face Sets")
-        layout.operator("sculpt.weights_to_face_sets", text="Weights to Face Sets")
+        layout.operator("sculpt.face_set_from_vert_groups", text="Face Sets to Vertex Groups")
+        layout.operator("sculpt.weights_to_face_sets", text="Vertex Groups to Face Sets")
         
         # Check Blender version to run different Blend Boundary Normals operator
         if bpy.app.version >= (4, 5, 0):

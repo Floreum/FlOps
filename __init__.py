@@ -52,7 +52,7 @@ from .Misc.SetOrigin import register as register_setorigin, unregister as unregi
 from .GeometryNodes.GN_Mask import register as register_gn_mask, unregister as unregister_gn_mask
 
 # Sculpting Operators
-from .VertexGroups.VertGroupsFromFaceSets import register as register_face_set_to_vert_groups, unregister as unregister_face_set_to_vert_groups
+from .VertexGroups.VertGroups2FaceSets import register as register_face_set_to_vert_groups, unregister as unregister_face_set_to_vert_groups
 from .Sculpting.MaskSelectedVerts import register as register_sculpt_mask_selected_verts, unregister as unregister_sculpt_mask_selected_verts
 from .VertexGroups.Weights2FaceSets import register as register_weights_to_face_sets, unregister as unregister_weights_to_face_sets
 
