@@ -10,6 +10,7 @@ from ..MirrorOps.dissolve_ops import OBJECT_OT_mirror_merge, OBJECT_OT_mirror_Di
 
 from ..MirrorOps.MergeCenter import OBJECT_OT_mirror_MergeByCenter
 from ..MirrorOps.mirror_op import OBJECT_OT_MirrorOperator, MirrorAxisProperty
+from ..MirrorOps.SymSelectedObjectLoc import OBJECT_OT_Symmetrize_Selected_Object_Location
 
 from ..Misc.sanitize_mesh_names import OBJECT_OT_SanitizeName, OBJECT_OT_RemoveAllMaterials, OBJECT_OT_SanitizeAllNames
 from ..UI_Additions.temp_layout import MESH_OT_cycle_items, OBJECT_OT_mirror_Crease, OBJECT_OT_mirror_Extract, OBJECT_OT_mirror_UVSeams, OBJECT_OT_ripedgemove # this needs to get renamed and put into its own UI menus
@@ -54,6 +55,7 @@ class VIEW3D_MT_MirrorDelete(Menu):
         operator(OBJECT_OT_mirror_DissolveLimited.bl_idname)
         operator(OBJECT_OT_mirror_DissolveEdges.bl_idname)
         operator(OBJECT_OT_mirror_DissolveVerts.bl_idname)
+        operator(OBJECT_OT_Symmetrize_Selected_Object_Location.bl_idname)
         
         separator()
         layout.operator_context = 'INVOKE_DEFAULT'
@@ -99,6 +101,7 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         layout.separator()
         operator(OBJECT_OT_SanitizeName.bl_idname)
         operator(OBJECT_OT_RemoveAllMaterials.bl_idname)
+
         
         # Additional UI elements
         layout.separator()

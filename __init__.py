@@ -32,6 +32,7 @@ from .MirrorOps.delete_ops import register as register_delete_ops, unregister as
 from .MirrorOps.dissolve_ops import register as register_disolve_ops, unregister as unregister_disolve_ops
 from .MirrorOps.MergeCenter import register as register_mirror_merge, unregister as unregister_mirror_merge
 from .MirrorOps.mirror_op import register as register_mirroroperator, unregister as unregister_mirroroperator
+from .MirrorOps.SymSelectedObjectLoc import register as register_sym_obj_loc, unregister as unregister_sym_obj_loc
 
 # Utility Operators
 from .Misc.sanitize_mesh_names import register as register_sanitize_names, unregister as unregister_sanitize_names
@@ -118,6 +119,7 @@ def register():
     register_mirror_merge()
     register_blend_normals()
     register_gn_blend_normals()
+    register_sym_obj_loc()
 
     # Utility Operators
     register_sanitize_names()
@@ -167,6 +169,7 @@ def unregister():
     unregister_mirror_merge()
     unregister_blend_normals()
     unregister_gn_blend_normals()
+    unregister_sym_obj_loc()
 
     # Utility Operators
     unregister_sanitize_names()
