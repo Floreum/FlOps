@@ -23,8 +23,6 @@ from ..GeometryNodes.GN_Mask import OBJECT_FLOPS_GN_MASK
 legacy_normals = version_check.legacy_normals
 
 
-
-
 # Draw the Delete UI.
 class VIEW3D_MT_MirrorDelete(Menu):
     bl_idname = "VIEW3D_MT_MirrorDelete"
@@ -37,14 +35,12 @@ class VIEW3D_MT_MirrorDelete(Menu):
         row = layout.row()
         column = layout.column()
         operator = self.layout.operator
-        
-        
+
         # Come back to this
         if context.scene.mirrorOP == False:
             column.label(text="Mirror Disabled")
         if context.scene.mirrorOP == True:
             column.label(text="Mirror Enabled")
-        
             
         separator()
         operator(OBJECT_OT_mirror_DeleteVerts.bl_idname)
@@ -85,11 +81,6 @@ class VIEW3D_MT_CycleItemsPanel(Menu):
         row = layout.row()
         column = layout.column()
         operator = self.layout.operator
-        
-        
-
-        
-        
 
         separator()
         operator(OBJECT_OT_mirror_UVSeams.bl_idname)
